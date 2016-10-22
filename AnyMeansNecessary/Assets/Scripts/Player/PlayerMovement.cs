@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour {
     private bool m_Jump = false;                      // the world-relative desired move direction, calculated from the camForward and user input.
     private bool m_CrouchToggle;
 
+    public float MoveDirectionPunishment = 1;
+
     private void Update()
     {
         //no junping in this game.
@@ -18,6 +20,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             m_Jump = Input.GetButtonDown("Jump");
         }*/
+        if (Input.GetButtonDown("CrouchToggle")) m_CrouchToggle = !m_CrouchToggle;
     }
 
 
@@ -27,7 +30,7 @@ public class PlayerMovement : MonoBehaviour {
         // read inputs
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        if (Input.GetButtonDown("CrouchToggle")) m_CrouchToggle = !m_CrouchToggle;
+        
 
         // calculate move direction to pass to character
         if (m_Cam != null)
@@ -38,12 +41,14 @@ public class PlayerMovement : MonoBehaviour {
         }
         else
         {
-            // we use world-relative directions in the case of no main camera
-            m_Move = v * Vector3.forward + h * Vector3.right;
+            Debug.LogError("No Camera for player");
         }
 
         // walk speed multiplier
         if (!(Input.GetAxis("Sprint") > 0) && !m_Crouching) m_Move *= 0.5f;
+
+        // First person backwards penalty
+        m_Move *= MoveDirectionPunishment;
 
         // pass all parameters to the character control script
         Move(m_Move, m_CrouchToggle, m_Jump);
@@ -53,6 +58,8 @@ public class PlayerMovement : MonoBehaviour {
     #endregion
 
     #region MovementFromUnity
+
+    public Vector3 CameraInput = new Vector3();
 
     [SerializeField]
     float m_MovingTurnSpeed = 360;
@@ -143,6 +150,8 @@ public class PlayerMovement : MonoBehaviour {
 
         // send input and other state parameters to the animator
         UpdateAnimator(move);
+
+        //CameraInput = Vector3.zero;
     }
 
 

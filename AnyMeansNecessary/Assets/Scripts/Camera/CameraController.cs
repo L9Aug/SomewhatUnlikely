@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour {
     public float ThirdPersonCameraDistance;
     public Vector3 ThirdPersonAnchor;
 
+    PlayerMovement m_PlayerMovement;
+
     Transform CameraRootObject;
 
     bool CamModeChange = false;
@@ -21,24 +23,24 @@ public class CameraController : MonoBehaviour {
 
     bool InvertMouse = false;
 
-    float LerpTimer = 1.1f;
-    float CameraRestTimer = 2;
-    float CameraRestDuration = 0.5f;
+    float CamChangeLerpTimer = 0;
+    float CamChangeLerpDir = -1;
 
-    float HorizontalRestPoint = 0;
-    float VerticalRestPoint = 0;
+    Vector3 ThirdPersonTargetPosition;
+    Quaternion ThirdPersonTargetRotation;
+    Vector3 FirstPersonTargetPosition;
+    Quaternion firstPersonTargetRotation;
 
 	// Use this for initialization
 	void Start ()
     {
         m_Camera = Camera.main;
+        m_PlayerMovement = GetComponent<PlayerMovement>();
 
         GameObject CameraRootObj = new GameObject("Camera Root Obj");
         CameraRootObject = CameraRootObj.transform;
         CameraRootObj.transform.SetParent(transform, false);
         CameraRootObject.localPosition = ThirdPersonAnchor;
-        m_Camera.transform.SetParent(CameraRootObject, false);
-        UpdateCameraPosition();
 
         SetupStateMachine();
 	}
@@ -48,11 +50,7 @@ public class CameraController : MonoBehaviour {
     {
         TestForCamModeChange();
 
-        List<Action> actions = CameraStates.SMUpdate();
-        foreach(Action a in actions)
-        {
-            a();
-        }
+        CameraStates.SMUpdate();
 	}
 
     void TestForCamModeChange()
@@ -63,43 +61,50 @@ public class CameraController : MonoBehaviour {
         }
     }
 
+    void SetCameraPosition()
+    {
+        float CamLerpSpeed = 5;
+        CamChangeLerpTimer += Time.deltaTime * CamChangeLerpDir * CamLerpSpeed;
+
+        CamChangeLerpTimer = Mathf.Clamp(CamChangeLerpTimer, 0, 1);
+
+        m_Camera.transform.position = Vector3.Lerp(ThirdPersonTargetPosition, FirstPersonTargetPosition, CamChangeLerpTimer);
+        m_Camera.transform.rotation = Quaternion.Lerp(ThirdPersonTargetRotation, firstPersonTargetRotation, CamChangeLerpTimer);
+    }
+
     void OnCameraMove()
     {
-        //reset timer and update start point.
-        CameraRestTimer = 0;
-        LerpTimer = 0;
 
-        HorizontalRestPoint = HorizontalAngle;
-        VerticalRestPoint = VerticalAngle;
     }
 
-    void UpdateCameraPosition()
+    void UpdateThirdPersonCameraPosition()
     {
-        m_Camera.transform.localPosition = new Vector3(
+        ThirdPersonTargetPosition = new Vector3(
             ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Sin(HorizontalAngle),
             ThirdPersonCameraDistance * Mathf.Cos(VerticalAngle),
-            ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Cos(HorizontalAngle));
-        m_Camera.transform.LookAt(CameraRootObject);
+            ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Cos(HorizontalAngle)) + CameraRootObject.position;
+        //m_Camera.transform.LookAt(CameraRootObject);
+        ThirdPersonTargetRotation = Quaternion.LookRotation(CameraRootObject.position - ThirdPersonTargetPosition);
     }
 
-    void ResetCameraDisplacement()
+    void UpdateFirstPersonCameraPosition()
     {
-        if(CameraRestTimer > CameraRestDuration)
+        FirstPersonTargetPosition = transform.position + FirstPersonPosition;
+        firstPersonTargetRotation = Quaternion.Euler(VerticalAngle * Mathf.Rad2Deg, HorizontalAngle * Mathf.Rad2Deg, 0);
+    }
+
+    void TestMotionAlignment()
+    {
+        Vector3 PlayerForward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 CameraForward = Vector3.Scale(m_Camera.transform.forward, new Vector3(1, 0, 1)).normalized;
+
+        if(Vector3.Angle(PlayerForward, CameraForward) > 80)
         {
-            if(LerpTimer < 1)
-            {
-                HorizontalAngle = Mathf.Lerp(HorizontalRestPoint * Mathf.Rad2Deg, 0, LerpTimer) * Mathf.Deg2Rad;
-                VerticalAngle = Mathf.Lerp(VerticalRestPoint * Mathf.Rad2Deg, -90, LerpTimer) * Mathf.Deg2Rad;
-                LerpTimer += Time.deltaTime;
-            }
-            else
-            {
-                LerpTimer = 1;
-            }
+            m_PlayerMovement.MoveDirectionPunishment = 0.5f;
         }
         else
         {
-            CameraRestTimer += Time.deltaTime;
+            m_PlayerMovement.MoveDirectionPunishment = 1;
         }
     }
 
@@ -118,20 +123,20 @@ public class CameraController : MonoBehaviour {
         if (InvertMouse) VerticalDelta *= -1;
 
         HorizontalAngle += HorizontalDelta;
+
         VerticalAngle += VerticalDelta;
 
         VerticalAngle = Mathf.Clamp(VerticalAngle, -((Mathf.PI * 3f) / 4f), -(Mathf.PI / 4f));
 
         if ((Mathf.Abs(HorizontalDelta) + Mathf.Abs(VerticalDelta)) > 0.001f) OnCameraMove();
 
-        ResetCameraDisplacement();
-
-        UpdateCameraPosition();
+        UpdateThirdPersonCameraPosition();
     }
 
     void EndThirdPersonState()
     {
-
+        VerticalAngle += (Mathf.PI / 2);
+        CamChangeLerpDir = 1;
     }
 
     void BeginFirstPersonState()
@@ -141,12 +146,29 @@ public class CameraController : MonoBehaviour {
 
     void FirstPersonStateUpdate()
     {
+        float HorizontalDelta = Input.GetAxis("Mouse X") * Time.deltaTime;
+        float VerticalDelta = -Input.GetAxis("Mouse Y") * Time.deltaTime;
 
+        if (InvertMouse) VerticalDelta *= -1;
+
+        HorizontalAngle += HorizontalDelta;
+
+        VerticalAngle += VerticalDelta;
+
+        //transform.Rotate(Vector3.up, HorizontalDelta * Mathf.Rad2Deg);
+
+        VerticalAngle = Mathf.Clamp(VerticalAngle, -(Mathf.PI / 6f), (Mathf.PI / 6f));
+
+        TestMotionAlignment();
+
+        UpdateFirstPersonCameraPosition();
     }
 
     void EndFirstPersonState()
     {
-
+        m_PlayerMovement.MoveDirectionPunishment = 1;
+        VerticalAngle += -(Mathf.PI / 2);
+        CamChangeLerpDir = -1;
     }
 
     void GoToFirstPersonTransitionFunc()
@@ -196,9 +218,11 @@ public class CameraController : MonoBehaviour {
         // Assign Actions to States
         ThirdPersonState.EntryActions.Add(BeginThirdPersonState);
         ThirdPersonState.Actions.Add(ThirdPersonStateUpdate);
+        ThirdPersonState.Actions.Add(SetCameraPosition);
         ThirdPersonState.ExitActions.Add(EndThirdPersonState);
         FirstPersonState.EntryActions.Add(BeginFirstPersonState);
         FirstPersonState.Actions.Add(FirstPersonStateUpdate);
+        FirstPersonState.Actions.Add(SetCameraPosition);
         FirstPersonState.ExitActions.Add(EndFirstPersonState);
 
         // Assign Transitions to States
