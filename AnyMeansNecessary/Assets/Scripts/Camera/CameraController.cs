@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour {
     public Vector3 FirstPersonPosition;
     public float ThirdPersonCameraDistance;
     public Vector3 ThirdPersonAnchor;
+    public bool IsCrouched = false;
 
     PlayerMovement m_PlayerMovement;
 
@@ -30,6 +31,8 @@ public class CameraController : MonoBehaviour {
     Quaternion ThirdPersonTargetRotation;
     Vector3 FirstPersonTargetPosition;
     Quaternion firstPersonTargetRotation;
+
+    bool PunishMisAlignment = true;
 
 	// Use this for initialization
 	void Start ()
@@ -89,22 +92,39 @@ public class CameraController : MonoBehaviour {
 
     void UpdateFirstPersonCameraPosition()
     {
-        FirstPersonTargetPosition = transform.position + FirstPersonPosition;
+        Vector3 CrouchedDisplacement = Vector3.zero;
+        if (IsCrouched)
+        {
+            CrouchedDisplacement = GetCrouchedDisplacementVector(FirstPersonPosition);
+        }
+
+        FirstPersonTargetPosition = transform.position + FirstPersonPosition + CrouchedDisplacement;
         firstPersonTargetRotation = Quaternion.Euler(VerticalAngle * Mathf.Rad2Deg, HorizontalAngle * Mathf.Rad2Deg, 0);
     }
 
+    Vector3 GetCrouchedDisplacementVector(Vector3 AnchorPoint)
+    {
+        return new Vector3(0, (transform.position.y - (transform.position.y + AnchorPoint.y)) / 2f, 0);
+    }
+
+    /// <summary>
+    /// Can be toggled with 'L' atm
+    /// </summary>
     void TestMotionAlignment()
     {
-        Vector3 PlayerForward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 CameraForward = Vector3.Scale(m_Camera.transform.forward, new Vector3(1, 0, 1)).normalized;
+        if (PunishMisAlignment)
+        {
+            Vector3 PlayerForward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
+            Vector3 CameraForward = Vector3.Scale(m_Camera.transform.forward, new Vector3(1, 0, 1)).normalized;
 
-        if(Vector3.Angle(PlayerForward, CameraForward) > 80)
-        {
-            m_PlayerMovement.MoveDirectionPunishment = 0.5f;
-        }
-        else
-        {
-            m_PlayerMovement.MoveDirectionPunishment = 1;
+            if (Vector3.Angle(PlayerForward, CameraForward) > 80)
+            {
+                m_PlayerMovement.MoveDirectionPunishment = 0.7f;
+            }
+            else
+            {
+                m_PlayerMovement.MoveDirectionPunishment = 1;
+            }
         }
     }
 
@@ -117,6 +137,11 @@ public class CameraController : MonoBehaviour {
 
     void ThirdPersonStateUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            PunishMisAlignment = !PunishMisAlignment;
+        }
+
         float HorizontalDelta = Input.GetAxis("Mouse X") * Time.deltaTime;
         float VerticalDelta = -Input.GetAxis("Mouse Y") * Time.deltaTime;
 

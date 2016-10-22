@@ -9,18 +9,17 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 m_CamForward;             // The current forward direction of the camera
     private Vector3 m_Move;
     private bool m_Jump = false;                      // the world-relative desired move direction, calculated from the camForward and user input.
-    private bool m_CrouchToggle;
+    private bool m_CrouchToggle = false;
 
     public float MoveDirectionPunishment = 1;
 
     private void Update()
     {
-        //no junping in this game.
-        /*if (!m_Jump)
+        if (Input.GetButtonDown("CrouchToggle"))
         {
-            m_Jump = Input.GetButtonDown("Jump");
-        }*/
-        if (Input.GetButtonDown("CrouchToggle")) m_CrouchToggle = !m_CrouchToggle;
+            m_CrouchToggle = !m_CrouchToggle;
+            GetComponent<CameraController>().IsCrouched = m_CrouchToggle;
+        }
     }
 
 
