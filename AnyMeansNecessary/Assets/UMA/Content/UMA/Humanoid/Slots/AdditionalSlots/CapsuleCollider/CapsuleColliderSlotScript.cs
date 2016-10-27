@@ -8,6 +8,8 @@ namespace UMA
 	/// </summary>
 	public class CapsuleColliderSlotScript : MonoBehaviour 
 	{
+        public PhysicMaterial PM;
+
 		public void OnDnaApplied(UMAData umaData)
 		{
 			var umaDna = umaData.GetDna<UMADnaHumanoid>();
@@ -23,7 +25,7 @@ namespace UMA
 				rigid = umaData.gameObject.AddComponent<Rigidbody>();
 			}
 			rigid.constraints = RigidbodyConstraints.FreezeRotation;
-			rigid.mass = umaData.characterMass;
+            rigid.mass = 10; // umaData.characterMass;
 
 			var capsule = umaData.gameObject.GetComponent<CapsuleCollider>();
 			if (capsule == null)
@@ -33,6 +35,7 @@ namespace UMA
 			capsule.radius = umaData.characterRadius;
 			capsule.height = umaData.characterHeight;
 			capsule.center = new Vector3(0, capsule.height * 0.5f - 0.04f, 0);
+            capsule.material = PM;
 		}
 	}
 }

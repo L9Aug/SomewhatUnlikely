@@ -9,6 +9,7 @@ namespace UMA
         public Vector3 FirstPersonPosition;
         public Vector3 ThirdPersonAnchorPosition;
         public float CameraDistance;
+
         public void OnDnaApplied(UMAData umaData)
         {
             var camCont = umaData.GetComponent<CameraController>();
@@ -20,5 +21,6 @@ namespace UMA
             camCont.ThirdPersonAnchor = ThirdPersonAnchorPosition;
             camCont.ThirdPersonCameraDistance = CameraDistance;
         }
+
     }
 }

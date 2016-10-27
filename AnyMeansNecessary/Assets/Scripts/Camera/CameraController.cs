@@ -11,9 +11,8 @@ public class CameraController : MonoBehaviour {
     public Vector3 FirstPersonPosition;
     public float ThirdPersonCameraDistance;
     public Vector3 ThirdPersonAnchor;
-    public bool IsCrouched = false;
 
-    PlayerMovement m_PlayerMovement;
+    ThirdPersonMovement m_ThirdPersonMovement;
 
     Transform CameraRootObject;
 
@@ -38,12 +37,13 @@ public class CameraController : MonoBehaviour {
 	void Start ()
     {
         m_Camera = Camera.main;
-        m_PlayerMovement = GetComponent<PlayerMovement>();
+        m_ThirdPersonMovement = GetComponent<ThirdPersonMovement>();
 
         GameObject CameraRootObj = new GameObject("Camera Root Obj");
         CameraRootObject = CameraRootObj.transform;
         CameraRootObj.transform.SetParent(transform, false);
         CameraRootObject.localPosition = ThirdPersonAnchor;
+        m_Camera.transform.SetParent(transform, false);
 
         SetupStateMachine();
 	}
@@ -72,7 +72,7 @@ public class CameraController : MonoBehaviour {
         CamChangeLerpTimer = Mathf.Clamp(CamChangeLerpTimer, 0, 1);
 
         m_Camera.transform.position = Vector3.Lerp(ThirdPersonTargetPosition, FirstPersonTargetPosition, CamChangeLerpTimer);
-        m_Camera.transform.rotation = Quaternion.Lerp(ThirdPersonTargetRotation, firstPersonTargetRotation, CamChangeLerpTimer);
+        m_Camera.transform.rotation = Quaternion.Lerp(ThirdPersonTargetRotation, m_Camera.transform.rotation, CamChangeLerpTimer);
     }
 
     void OnCameraMove()
@@ -86,20 +86,19 @@ public class CameraController : MonoBehaviour {
             ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Sin(HorizontalAngle),
             ThirdPersonCameraDistance * Mathf.Cos(VerticalAngle),
             ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Cos(HorizontalAngle)) + CameraRootObject.position;
-        //m_Camera.transform.LookAt(CameraRootObject);
         ThirdPersonTargetRotation = Quaternion.LookRotation(CameraRootObject.position - ThirdPersonTargetPosition);
     }
 
     void UpdateFirstPersonCameraPosition()
     {
         Vector3 CrouchedDisplacement = Vector3.zero;
-        if (IsCrouched)
+        if (PlayerMovementController.PlayerCrouching)
         {
             CrouchedDisplacement = GetCrouchedDisplacementVector(FirstPersonPosition);
         }
 
         FirstPersonTargetPosition = transform.position + FirstPersonPosition + CrouchedDisplacement;
-        firstPersonTargetRotation = Quaternion.Euler(VerticalAngle * Mathf.Rad2Deg, HorizontalAngle * Mathf.Rad2Deg, 0);
+        m_Camera.GetComponent<FirstPersonHeadBob>().m_OriginalCameraPosition = m_Camera.transform.position;
     }
 
     Vector3 GetCrouchedDisplacementVector(Vector3 AnchorPoint)
@@ -119,11 +118,11 @@ public class CameraController : MonoBehaviour {
 
             if (Vector3.Angle(PlayerForward, CameraForward) > 80)
             {
-                m_PlayerMovement.MoveDirectionPunishment = 0.7f;
+                m_ThirdPersonMovement.MoveDirectionPunishment = 0.7f;
             }
             else
             {
-                m_PlayerMovement.MoveDirectionPunishment = 1;
+                m_ThirdPersonMovement.MoveDirectionPunishment = 1;
             }
         }
     }
@@ -160,7 +159,6 @@ public class CameraController : MonoBehaviour {
 
     void EndThirdPersonState()
     {
-        VerticalAngle += (Mathf.PI / 2);
         CamChangeLerpDir = 1;
     }
 
@@ -170,29 +168,12 @@ public class CameraController : MonoBehaviour {
     }
 
     void FirstPersonStateUpdate()
-    {
-        float HorizontalDelta = Input.GetAxis("Mouse X") * Time.deltaTime;
-        float VerticalDelta = -Input.GetAxis("Mouse Y") * Time.deltaTime;
-
-        if (InvertMouse) VerticalDelta *= -1;
-
-        HorizontalAngle += HorizontalDelta;
-
-        VerticalAngle += VerticalDelta;
-
-        //transform.Rotate(Vector3.up, HorizontalDelta * Mathf.Rad2Deg);
-
-        VerticalAngle = Mathf.Clamp(VerticalAngle, -(Mathf.PI / 6f), (Mathf.PI / 6f));
-
-        TestMotionAlignment();
-
+    {        
         UpdateFirstPersonCameraPosition();
     }
 
     void EndFirstPersonState()
     {
-        m_PlayerMovement.MoveDirectionPunishment = 1;
-        VerticalAngle += -(Mathf.PI / 2);
         CamChangeLerpDir = -1;
     }
 
@@ -278,7 +259,7 @@ public class CameraController : MonoBehaviour {
         GoToThird.TransistionName = "Going To Third Person Mode";
 
         // Set if the Machine should print Messages
-            // not required as it is set to true by default.
+        CameraStates.PrintMessages = false;
 
         // Start the State Machine
         CameraStates.InitMachine();
