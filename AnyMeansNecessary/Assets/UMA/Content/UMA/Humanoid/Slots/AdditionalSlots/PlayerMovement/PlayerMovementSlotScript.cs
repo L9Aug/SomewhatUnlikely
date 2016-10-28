@@ -11,9 +11,26 @@ namespace UMA
     {
         public void OnDnaApplied(UMAData umaData)
         {
-            var playerMovement = umaData.GetComponent<PlayerMovement>();
-            if (playerMovement == null)
-                umaData.gameObject.AddComponent<PlayerMovement>();
+            var thirdPersonMovement = umaData.GetComponent<ThirdPersonMovement>();
+            if (thirdPersonMovement == null)
+            {
+                thirdPersonMovement = umaData.gameObject.AddComponent<ThirdPersonMovement>();
+            }
+
+            var firstPersonMovement = umaData.GetComponent<FirstPersonMovement>();
+            if(firstPersonMovement == null)
+            {
+                firstPersonMovement = umaData.gameObject.AddComponent<FirstPersonMovement>();
+            }
+
+            var movementController = umaData.GetComponent<PlayerMovementController>();
+            if(movementController == null)
+            {
+                movementController = umaData.gameObject.AddComponent<PlayerMovementController>();
+            }
+            movementController.m_TPM = thirdPersonMovement;
+            movementController.m_FPM = firstPersonMovement;
+
         }
     }
 

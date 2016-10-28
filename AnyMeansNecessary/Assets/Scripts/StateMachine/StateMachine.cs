@@ -28,7 +28,7 @@ public class StateMachine
         if(PrintMessages) Debug.Log(CurrentState.StateName);
     }
 
-    public List<Action> SMUpdate()
+    public void SMUpdate()
     {
         triggeredTransition = null;
         List<Action> ReturnList = new List<Action>();
@@ -61,7 +61,10 @@ public class StateMachine
             ReturnList.AddRange(CurrentState.Actions);
         }
 
-        return ReturnList;
+        foreach(Action a in ReturnList)
+        {
+            a();
+        }
     }
 }
 
