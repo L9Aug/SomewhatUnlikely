@@ -5,11 +5,15 @@ using System.Collections;
 public class UIElements : MonoBehaviour {
 
 
-    public int health;
-    public int ammo;
-    public bool healthloss;
-    public bool swapWeapon;
+    private int health = 100;
+    private int ammo = 30;
+    private int xp = 0;
+    private float level = 1;
+    private bool healthloss;
+    private bool swapWeapon;
+
     public Slider healthBar;
+    public Slider xpBar;
     public Toggle mainObjective;
     public Text ammoCount;
     public Text reload;
@@ -27,6 +31,9 @@ public class UIElements : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+
+      
+
         //if(healthUsed == true)
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -35,6 +42,7 @@ public class UIElements : MonoBehaviour {
             {
                 changeHealth(10,healthloss);
             }
+            xpGain(10);
         }
 
         //if(hit == true)
@@ -80,7 +88,7 @@ public class UIElements : MonoBehaviour {
     }
 
 
-    public void firing ()
+    private void firing ()
     {
         if (ammo > 0)
         {
@@ -96,35 +104,48 @@ public class UIElements : MonoBehaviour {
 
 
 
-    public void changeHealth(int value,bool change)
+    private void changeHealth(int value,bool change)
     {
         if (change == false)
         {
             health += value;
         }
 
-        if(change == true)
+       else
         {
             health -= value;
         }
         healthBar.value = health;
     }
 
-    public void toggleObjective(bool isComplete)
+    private void toggleObjective(bool isComplete)
     {
         mainObjective.isOn = isComplete;
     }
 
-    public void toggleweaponSprite(bool isSwapped)
+    private void toggleweaponSprite(bool isSwapped)
     {
         if(isSwapped == true)
         {
             weaponImage.texture = (Texture)tranqPistol;
         }
 
-        if(isSwapped == false)
+        else
         {
             weaponImage.texture = (Texture)rifle;
+        }
+    }
+
+    private void xpGain(int gain) // call this function with the amount of xp you wish to add for the player
+    {
+        //next level equation is 25n^2 + 25n + 50
+        xp += gain;
+        float requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
+        xpBar.value = (xp / requiredXpForLevel) * 100;
+        if(xp == requiredXpForLevel)
+        {
+            level++;
+            xp = 0;  //if we want pool to reset for each level
         }
     }
 }
