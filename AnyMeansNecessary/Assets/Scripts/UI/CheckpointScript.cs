@@ -3,13 +3,13 @@ using System.Collections;
 
 public class CheckpointScript : MonoBehaviour {
 
-    public bool isActivated;
+    bool isActivated;
     public static GameObject[] checkPointList;
     public static GameObject[] EnemyList;
 
     // Use this for initialization
     void Start () {
-        checkPointList = GameObject.FindGameObjectsWithTag("CheckPoint"); //Finds all the checkpoints in the level by searching for the tag	
+        checkPointList = GameObject.FindGameObjectsWithTag("Checkpoint"); //Finds all the checkpoints in the level by searching for the tag	
         EnemyList = GameObject.FindGameObjectsWithTag("Enemy"); //Finds all the enemies in the scene, tag all enmeies with this tag so that there position can also be reset to the poin of checkpoint being activated
     }
 	
@@ -19,10 +19,15 @@ public class CheckpointScript : MonoBehaviour {
 	}
     private void ActivateCheckpoint()
     {
+        Debug.Log("Active checkpoint called");
         foreach (GameObject checkpoint in checkPointList)
         {
             checkpoint.GetComponent<CheckpointScript>().isActivated = false;
            
+        }
+        foreach(GameObject enemy in EnemyList)
+        {
+            
         }
         isActivated = true;
         
