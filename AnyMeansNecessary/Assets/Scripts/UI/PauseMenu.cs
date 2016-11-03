@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour {
     public Button Resume;
     public Button Reload;
     public Button Quit;
+   
 
 
    
@@ -26,6 +27,7 @@ public class PauseMenu : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             enableButtons();
+            
             Time.timeScale = 0.0f;
             
         }
@@ -41,6 +43,7 @@ public class PauseMenu : MonoBehaviour {
         Resume.gameObject.SetActive(false);
         Reload.gameObject.SetActive(false);
         Quit.gameObject.SetActive(false);
+       
     }
 
     void enableButtons()//Function brings the pause menu up
@@ -48,6 +51,7 @@ public class PauseMenu : MonoBehaviour {
         Resume.gameObject.SetActive(true);
         Reload.gameObject.SetActive(true);
         Quit.gameObject.SetActive(true);
+       
     }
 
      void resume() //resumes game
@@ -62,16 +66,27 @@ public class PauseMenu : MonoBehaviour {
         Debug.Log("Is Quitting");
     }
 
-    void reloadCheckpoint()
+    void reloadCheckpoint()//reloads to checkpoint
     {
        GameObject playerPos = GameObject.FindGameObjectWithTag("Player");
+        GameObject[] enemyPos = GameObject.FindGameObjectsWithTag("Enemy");
 
-        playerPos.transform.position = CheckpointScript.GetCurrentPositions();
+        int arrayLength = enemyPos.Length;
+       for(int i = 0; i < arrayLength; i++)
+       {
+           enemyPos[i].transform.position = CheckpointScript.EnemyPosition[i];//moves all enemies to stored position when the player reached the chekpoint
+       }
+        playerPos.transform.position = CheckpointScript.GetCheckpointPosition();//moves player to checkpoint position
+        UIElements.health = CheckpointScript.storedHealth;// sets health to stored value
+        UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value
+        
 
         resume();
         
         
     }
 
-   
+  
+
+  
 }

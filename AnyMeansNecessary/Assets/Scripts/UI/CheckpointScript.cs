@@ -4,20 +4,20 @@ using System.Collections;
 public class CheckpointScript : MonoBehaviour {
 
     bool isActivated;
+   public static int storedHealth;
+    public static int storedXp;
     public static GameObject[] checkPointList;
-    public static GameObject[] EnemyList;
-
+   
+    public static Vector3 []EnemyPosition ;
     // Use this for initialization
     void Start () {
         checkPointList = GameObject.FindGameObjectsWithTag("Checkpoint"); //Finds all the checkpoints in the level by searching for the tag	
-        EnemyList = GameObject.FindGameObjectsWithTag("Enemy"); //Finds all the enemies in the scene, tag all enmeies with this tag so that there position can also be reset to the poin of checkpoint being activated
+        EnemyPosition =  new Vector3[GameObject.FindGameObjectsWithTag("Enemy").Length];
     }
 	
-	// Update is called once per frame
-	void Update () {
 	
-	}
-    private void ActivateCheckpoint()
+
+    private void ActivateCheckpoint()//creates an active chekpoint, active chekpoint position data is the data that will be stored
     {
         Debug.Log("Active checkpoint called");
         foreach (GameObject checkpoint in checkPointList)
@@ -25,15 +25,13 @@ public class CheckpointScript : MonoBehaviour {
             checkpoint.GetComponent<CheckpointScript>().isActivated = false;
            
         }
-        foreach(GameObject enemy in EnemyList)
-        {
-            
-        }
         isActivated = true;
+       
+        
         
     }
 
-    public static Vector3 GetCurrentPositions()
+    public static Vector3 GetCheckpointPosition()//gathers the active checkpoints position 
     {
         Vector3 posValue = new Vector3(0.0f, 0.418f, 0.0f);
         if (checkPointList != null)
@@ -43,6 +41,7 @@ public class CheckpointScript : MonoBehaviour {
                if(checkpoint.GetComponent<CheckpointScript>().isActivated == true)
                 {
                     posValue = checkpoint.transform.position;
+                    
                     break;
                 }
             }
@@ -51,11 +50,23 @@ public class CheckpointScript : MonoBehaviour {
         return posValue;
     }
 
-    void OnTriggerEnter(Collider checkpointCollider)
+    
+
+
+    void OnTriggerEnter(Collider checkpointCollider)//stores all required data on collision with the checkpoints trigger area
     {
         if(checkpointCollider.tag == "Player")
         {
-            ActivateCheckpoint();
+             ActivateCheckpoint();
+            int arrayLength = EnemyPosition.Length;
+            for(int i = 0; i < arrayLength; i++)
+            {
+                EnemyPosition[i] = GameObject.FindGameObjectsWithTag("Enemy")[i].transform.position; 
+            }
+           storedHealth = UIElements.health;
+            storedXp = UIElements.xp;
+            
+
         }
     }
 }

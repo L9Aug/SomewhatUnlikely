@@ -5,9 +5,9 @@ using System.Collections;
 public class UIElements : MonoBehaviour {
 
 
-    private int health = 100;
-    private int ammo = 30;
-    private int xp = 0;
+    public static int health = 100;
+    static int ammo = 30;
+    public static int xp = 0;
     private float level = 1;
     private bool healthloss;
     private bool swapWeapon;
@@ -32,8 +32,12 @@ public class UIElements : MonoBehaviour {
 	void Update () {
 
 
-      
+        healthBar.value = health;
+        float requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
+        xpBar.value = (xp / requiredXpForLevel) * 100;
 
+
+#region keyintputs 
         //if(healthUsed == true)
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -42,7 +46,7 @@ public class UIElements : MonoBehaviour {
             {
                 changeHealth(10,healthloss);
             }
-            xpGain(10);
+            xpGain(10,requiredXpForLevel);
         }
 
         //if(hit == true)
@@ -84,6 +88,7 @@ public class UIElements : MonoBehaviour {
             ammoCount.text = ammo.ToString() + "/30";
             reload.text = "";
         }
+#endregion
 
     }
 
@@ -115,7 +120,7 @@ public class UIElements : MonoBehaviour {
         {
             health -= value;
         }
-        healthBar.value = health;
+       
     }
 
     private void toggleObjective(bool isComplete)
@@ -136,16 +141,17 @@ public class UIElements : MonoBehaviour {
         }
     }
 
-    private void xpGain(int gain) // call this function with the amount of xp you wish to add for the player
+    private void xpGain(int gain,float requiredXP) // call this function with the amount of xp you wish to add for the player and the requiredXpforLevel float
     {
         //next level equation is 25n^2 + 25n + 50
         xp += gain;
-        float requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
-        xpBar.value = (xp / requiredXpForLevel) * 100;
-        if(xp == requiredXpForLevel)
+       
+        if (xp == requiredXP)
         {
             level++;
             xp = 0;  //if we want pool to reset for each level
         }
     }
+
+   
 }
