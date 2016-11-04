@@ -46,6 +46,7 @@ public class CameraController : MonoBehaviour {
         m_Camera.transform.SetParent(transform, false);
 
         SetupStateMachine();
+        CamModeChange = true;
 	}
 	
 	// Update is called once per frame
@@ -164,7 +165,7 @@ public class CameraController : MonoBehaviour {
 
     void BeginFirstPersonState()
     {
-
+        //m_Camera.transform.rotation = Quaternion.identity;
     }
 
     void FirstPersonStateUpdate()

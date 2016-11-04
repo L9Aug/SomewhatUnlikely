@@ -17,12 +17,12 @@ public class PlayerMovementController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         SetupStateMachine();
+        CamModeChange = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         TestForCamModeChange();
-
         PMSM.SMUpdate();
 	}
 
@@ -38,7 +38,7 @@ public class PlayerMovementController : MonoBehaviour {
 
     void BeginThirdPersonState()
     {
-        m_FPM.enabled = false;
+        //m_FPM.enabled = false;
         m_TPM.enabled = true;
     }
 
@@ -54,7 +54,7 @@ public class PlayerMovementController : MonoBehaviour {
 
     void BeginFirstPersonState()
     {
-        m_TPM.enabled = false;
+        //m_TPM.enabled = false;
         m_FPM.enabled = true;
     }
 

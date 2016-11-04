@@ -129,6 +129,17 @@ public class FirstPersonMovement : MonoBehaviour {
     private void OnEnable()
     {
         if(anim != null)
+            anim.applyRootMotion = false;
+    }
+
+    private void OnDisable()
+    {
+        if (anim != null)
+            anim.applyRootMotion = true;
+    }
+
+    public void ResetRootMotion()
+    {
         anim.applyRootMotion = false;
     }
 
@@ -212,6 +223,10 @@ public class FirstPersonMovement : MonoBehaviour {
         anim.SetFloat("Forward", ForwardMotion, 0.1f, Time.deltaTime);
         anim.SetBool("Crouch", PlayerMovementController.PlayerCrouching);
         anim.SetBool("OnGround", m_IsGrounded);
+        if (!m_IsGrounded)
+        {
+            anim.SetFloat("Jump", m_RigidBody.velocity.y);
+        }
     }
 
     private float SlopeMultiplier()
