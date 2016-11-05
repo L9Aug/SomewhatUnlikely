@@ -21,6 +21,11 @@ public class ThirdPersonMovement : MonoBehaviour {
         }
     }
 
+    private void OnEnable()
+    {
+        if (m_Animator != null)
+            m_Animator.applyRootMotion = true;
+    }
 
     // Fixed update is called in sync with physics
     private void FixedUpdate()

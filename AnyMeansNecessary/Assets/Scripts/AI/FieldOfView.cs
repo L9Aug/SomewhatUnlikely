@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 
+
+/// <summary>
+/// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+/// </summary>
+
+
 public class FieldOfView : MonoBehaviour
 {
     public float viewRadius;
@@ -12,11 +18,16 @@ public class FieldOfView : MonoBehaviour
     public LayerMask obstacleMask;
 
     public static float detectionTimer = 1.5f;
-    private float detectedtimer = 0;
+    public float detectedtimer = 0;
     NavMeshAgent Agent;
+    public GameObject Player;
+    private Vector3 distToPlayer;
 
+    private Animator Anim;
+    public Gun CurrentWeapon;
     void Start()
     {
+        Anim = GetComponent<Animator>();
         Agent = GetComponent<NavMeshAgent>();
     }
 
@@ -36,6 +47,14 @@ public class FieldOfView : MonoBehaviour
                         Debug.DrawLine(transform.position, targetsInViewRadius[i].transform.position, Color.green); //simple debug to see that the player has been seen within the scene
                         if (detectedtimer >= detectionTimer)
                         {
+                            distToPlayer = transform.position - Player.transform.position;
+                            if (distToPlayer.magnitude < 10)
+                            { 
+                                if (CurrentWeapon.Fire(targetsInViewRadius[i].transform.position, 1 << 8, 0, true))
+                                {
+                                    Anim.SetTrigger("Fire");
+                                }
+                             }
                             GetComponent<AI_Main>().setState(AI_Main.State.Chase); //tells ai to chase player
                             return true; // returns true and sets static "detected" from ai.main to true via checklost function to make all ai chase the player
                         }
@@ -44,28 +63,6 @@ public class FieldOfView : MonoBehaviour
                             detectedtimer += Time.deltaTime;
                             return false;
                         }
-                    }else if (targetsInViewRadius[i].GetComponent<AI_Main>()._state == AI_Main.State.Dead)
-                    {
-                        if (detectedtimer >= detectionTimer)
-                        {
-                            GetComponent<AI_Main>().setState(AI_Main.State.Alerted);
-                            Vector3 distToTarget = transform.position - targetsInViewRadius[i].transform.position;
-                            if(distToTarget.magnitude < 5)
-                            {
-                                Agent.speed = 0;
-                            }else
-                            {
-                                Agent.speed = 0.5f;
-                                Agent.SetDestination(targetsInViewRadius[i].transform.position);
-                            }
-                            Debug.DrawLine(transform.position, targetsInViewRadius[i].transform.position, Color.green); //simple debug to see that the player has been seen within the scene
-                            detectionTimer = 0.5f;
-                        }
-                        else
-                        {
-                            detectedtimer += Time.deltaTime;
-                        }
-                        return false;
                     }
                 }
             }

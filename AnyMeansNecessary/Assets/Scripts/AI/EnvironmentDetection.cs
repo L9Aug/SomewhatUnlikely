@@ -2,6 +2,12 @@
 using UnityEditor;
 using System.Collections;
 
+
+/// <summary>
+/// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+/// </summary>
+
+
 public class EnvironmentDetection : MonoBehaviour {
 
     public float detectionRadius;
@@ -11,10 +17,6 @@ public class EnvironmentDetection : MonoBehaviour {
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
-    }
-    void Update()
-    {
-        Detection();
     }
 
     public bool Detection()

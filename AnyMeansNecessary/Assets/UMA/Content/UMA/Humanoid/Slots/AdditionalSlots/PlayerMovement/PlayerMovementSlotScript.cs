@@ -22,6 +22,7 @@ namespace UMA
             {
                 firstPersonMovement = umaData.gameObject.AddComponent<FirstPersonMovement>();
             }
+            firstPersonMovement.enabled = false;
 
             var movementController = umaData.GetComponent<PlayerMovementController>();
             if(movementController == null)

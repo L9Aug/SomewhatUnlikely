@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// <summary>
+/// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+/// </summary>
+
+
 public class AI_Main : MonoBehaviour {
     public static bool detected = false; // used for informing all enemy ai's if player is detected
     public GameObject Player; // for determining whom to chase // may be modifed at later date.
     public State _state; 
     private NavMeshAgent Agent;
 
-    //basic ai//
 
     //patrol variables//
     public Transform[] Waypoints; // use empty game objects in the inpector to set new waypoints
@@ -19,11 +24,7 @@ public class AI_Main : MonoBehaviour {
     private float lostTimer;
 
 
-    //detection//
-    public float heightMultiplier = 0.01f; // modify this to determine where on npc rays are cast from. 
-    public float visualRange = 10; // distance of raycasts (how far npc can detect player)
-    private RaycastHit hit;
-
+    private Camera PlayerCam;
 
     public void Start()
     {
@@ -47,12 +48,15 @@ public class AI_Main : MonoBehaviour {
 
             case State.Patrol:
                 checkLost(GetComponent<FieldOfView>().FindVisibleTargets()); // constantly searches if player is within detection radius
+                GetComponent<BodyDetection>().FindBodies();
+                GetComponent<EnvironmentDetection>().Detection();
                 Patrol();
                 break;
 
             case State.Chase:
                 checkLost(GetComponent<FieldOfView>().FindVisibleTargets()); // constantly searches if player is within detection radius
                 Chase(Player);
+                GetComponent<Cover>().AICover();
                 break;
 
             case State.Attack:
@@ -63,7 +67,11 @@ public class AI_Main : MonoBehaviour {
               //  kill(); // destroys gameobject
                 break;
             case State.Alerted:
+                GetComponent<BodyDetection>().FindBodies();
                 checkLost(GetComponent<FieldOfView>().FindVisibleTargets()); // constantly searches if player is within detection radius
+                break;
+            case State.InCover:
+                GetComponent<Cover>().AICover();
                 break;
             case State.Knockedout:
                 setState(State.Patrol);
@@ -80,6 +88,7 @@ public class AI_Main : MonoBehaviour {
         Attack,       //Attack player if siutation correct
         Dead,         //dead
         Alerted,      //used when finding bodies
+        InCover,
         Knockedout    //knocked out by various means
     }
 
@@ -105,9 +114,12 @@ public class AI_Main : MonoBehaviour {
                 ///determing if at end of patrol route or start then sending it in reverse direction
                 if (reverse == false)
                 {
-                    currentWaypoint++;
+
+                    if(Waypoints.Length > 1) { 
+                        currentWaypoint++;
                     if (currentWaypoint == Waypoints.Length - 1)
                         reverse = true;
+                    }
                 }
                 else
                 {
