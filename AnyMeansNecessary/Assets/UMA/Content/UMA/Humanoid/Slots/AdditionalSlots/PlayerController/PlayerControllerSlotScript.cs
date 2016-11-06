@@ -11,12 +11,21 @@ namespace UMA
         public float TakedownFOV; 
         public void OnDnaApplied(UMAData umaData)
         {
-            var playerController = GetComponent<PlayerController>();
+            var playerController = umaData.GetComponent<PlayerController>();
             if (playerController == null)
             {
                 playerController = umaData.gameObject.AddComponent<PlayerController>();
             }
             playerController.TakedownFOV = TakedownFOV;
+
+            var healthComp = umaData.GetComponent<HealthComp>();
+            if(healthComp == null)
+            {
+                healthComp = umaData.gameObject.AddComponent<HealthComp>();
+            }
+            healthComp.MaxHealth = 100;
+            healthComp.healthChanged.Add(playerController.HealthCheck);
+            healthComp.healthChanged.Add(FindObjectOfType<UIElements>().UpdateHealth);
 
         }
     }

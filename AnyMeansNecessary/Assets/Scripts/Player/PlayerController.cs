@@ -11,12 +11,14 @@ public class PlayerController : MonoBehaviour {
     private bool CanTakedown = false;
     private Animator Anim;
     private Camera PlayerCam;
+    private PauseMenu pauseMenu;
 
 	// Use this for initialization
 	void Start ()
     {
         Anim = GetComponent<Animator>();
         PlayerCam = Camera.main;
+        pauseMenu = FindObjectOfType<PauseMenu>();
 	}
 	
 	// Update is called once per frame
@@ -25,6 +27,14 @@ public class PlayerController : MonoBehaviour {
         WeaponChecks();
         TakedownCheck();
 	}
+
+    public void HealthCheck(float Health)
+    {
+        if(Health <= 0)
+        {
+            pauseMenu.reloadCheckpoint();
+        }
+    }
 
     void WeaponChecks()
     {
@@ -138,7 +148,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "AI")
+        if(other.gameObject.tag == "Enemy")
         {
             if (!AIInRange.Contains(other.gameObject))
             {
@@ -149,7 +159,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.tag == "AI")
+        if(other.gameObject.tag == "Enemy")
         {
             if (AIInRange.Contains(other.gameObject))
             {

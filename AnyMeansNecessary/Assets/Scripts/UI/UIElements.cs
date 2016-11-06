@@ -4,8 +4,7 @@ using System.Collections;
 
 public class UIElements : MonoBehaviour {
 
-
-    public static int health = 100;
+    public static float health = 100;
     static int ammo = 30;
     public static int xp = 0;
     private float level = 1;
@@ -24,20 +23,17 @@ public class UIElements : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
         ammoCount.text = ammo.ToString() + "/30";
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-
-        healthBar.value = health;
+        //healthBar.value = health;
         float requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
         xpBar.value = (xp / requiredXpForLevel) * 100;
 
-
 #region keyintputs 
+        /*
         //if(healthUsed == true)
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -58,6 +54,7 @@ public class UIElements : MonoBehaviour {
                 changeHealth(10,healthloss);
             }
         }
+        */
 
         // if(objComplete == true) 
         if(Input.GetKeyDown(KeyCode.Space))
@@ -77,21 +74,42 @@ public class UIElements : MonoBehaviour {
             toggleweaponSprite(swapWeapon);
         }
 
-        if(Input.GetMouseButtonDown(0))
+        /*if(Input.GetMouseButtonDown(0))
         {
             firing();
-        }
+        }*/
 
+        /*
         if(Input.GetKeyDown(KeyCode.R))
         {
             ammo = 30;
             ammoCount.text = ammo.ToString() + "/30";
             reload.text = "";
         }
+        */
 #endregion
-
     }
 
+    #region TristanFuncs
+    public void UpdateWeaponStats(int Ammo, int MaxAmmo)
+    {
+        //ammo = Ammo;
+        ammoCount.text = Ammo + " / " + MaxAmmo;
+        if(Ammo <= 0)
+        {
+            reload.text = "Press 'R' to Reload!";
+        }
+        else
+        {
+            reload.text = "";
+        }
+    }
+
+    public void UpdateHealth(float Health)
+    {
+        healthBar.value = Health;
+    }
+    #endregion
 
     private void firing ()
     {
@@ -107,20 +125,16 @@ public class UIElements : MonoBehaviour {
         }
     }
 
-
-
     private void changeHealth(int value,bool change)
     {
         if (change == false)
         {
             health += value;
         }
-
-       else
+        else
         {
             health -= value;
-        }
-       
+        }               
     }
 
     private void toggleObjective(bool isComplete)
@@ -134,7 +148,6 @@ public class UIElements : MonoBehaviour {
         {
             weaponImage.texture = (Texture)tranqPistol;
         }
-
         else
         {
             weaponImage.texture = (Texture)rifle;

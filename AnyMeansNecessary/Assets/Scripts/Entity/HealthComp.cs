@@ -1,28 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class HealthComp : MonoBehaviour {
 
     public float MaxHealth;
-    float Health;
+    float health;
 
-    public delegate void HealthChanged();
-    public HealthChanged healthChanged = null;
+    public delegate void HealthChanged(float Health);
+    public List<HealthChanged> healthChanged = new List<HealthChanged>();
 
 	// Use this for initialization
-	void Start () {
-        Health = MaxHealth;
+	void Start ()
+    {
+        health = MaxHealth;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    public float GetHealth()
+    {
+        return health;
+    }
+
+    public void SetHealth(float Value)
+    {
+        health = Value;
+        if (healthChanged.Count > 0)
+        {
+            foreach (HealthChanged h in healthChanged)
+            {
+                h(health);
+            }
+        }
+    }
 
     public void Hit(float Amount)
     {
-        Health -= Amount;
-        if(healthChanged != null) healthChanged();
-        print("Hit");
+        health -= Amount;
+        if(healthChanged.Count > 0)
+        {
+            foreach(HealthChanged h in healthChanged)
+            {
+                h(health);
+            }
+        }
+        //print("Hit");
     }
 }

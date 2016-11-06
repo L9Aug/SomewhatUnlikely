@@ -30,12 +30,22 @@ public class AI_Main : MonoBehaviour {
     {
     //    _state = State.Initalize; // nothing done in initalize, added for future purposes
         Agent = GetComponent<NavMeshAgent>();
+        GetComponent<HealthComp>().healthChanged.Add(HealthUpdate);
     }
     
 	// Update is called once per frame
 	void Update ()
     {
         FSM();
+    }
+
+    void HealthUpdate(float health)
+    {
+        if(health <= 0)
+        {
+            setState(State.Dead);
+            GetComponent<Animator>().SetTrigger("Takedown");
+        }
     }
 
     private void FSM()

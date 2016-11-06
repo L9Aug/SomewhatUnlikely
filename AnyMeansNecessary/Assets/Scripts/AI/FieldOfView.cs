@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
-
+#endif
 
 /// <summary>
 /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
@@ -83,6 +84,7 @@ public class FieldOfView : MonoBehaviour
 
 }
 
+#if UNITY_EDITOR
 #region FieldOfView Editor //allows visualization within the scene viewer
 [CustomEditor(typeof(FieldOfView))]
 public class FieldOfViewEditor : Editor
@@ -103,3 +105,4 @@ public class FieldOfViewEditor : Editor
     }
 }
 #endregion
+#endif

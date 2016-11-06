@@ -25,6 +25,8 @@ public class Gun : MonoBehaviour {
     int Magazine;
 
     public delegate Vector3 TargetFunc();
+    public delegate void UpdateWeapon(int magazine, int magazineSize);
+    public UpdateWeapon updateWeapon;
 
 	// Use this for initialization
 	void Start () {
@@ -122,6 +124,7 @@ public class Gun : MonoBehaviour {
     {
         OnCooldown = true;
         --Magazine;
+        CallUpdateWeapon();
         StartCoroutine(CooldownTick());
     }
 
@@ -133,6 +136,14 @@ public class Gun : MonoBehaviour {
     void DrawBulletPathInGame(Ray bulletPath, float BulletLength)
     {
 
+    }
+
+    void CallUpdateWeapon()
+    {
+        if (updateWeapon != null)
+        {
+            updateWeapon(Magazine, MagazineSize);
+        }
     }
 
     public virtual void Reload()
@@ -176,6 +187,7 @@ public class Gun : MonoBehaviour {
                 Reloading = false;
                 reloadTimer = 0;
                 Magazine = MagazineSize;
+                CallUpdateWeapon();
             }
             yield return null;
         }

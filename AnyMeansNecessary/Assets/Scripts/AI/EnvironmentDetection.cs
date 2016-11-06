@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /// <summary>
 /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
@@ -39,6 +40,7 @@ public class EnvironmentDetection : MonoBehaviour {
     }
 }
 
+#if UNITY_EDITOR
 #region Debug Editor
 //allows visualization within the scene viewer
 [CustomEditor(typeof(EnvironmentDetection))]
@@ -55,3 +57,4 @@ public class EnvironmentDetectionEditor : Editor
 }
 
 #endregion
+#endif

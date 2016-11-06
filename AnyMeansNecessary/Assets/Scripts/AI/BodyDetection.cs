@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
-
+#endif
 
 /// <summary>
 /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
@@ -22,7 +23,6 @@ public class BodyDetection : MonoBehaviour {
     {
       Agent = GetComponent<NavMeshAgent>();
     }
-
 
     public bool FindBodies()//called in patrol and alerted state
     {
@@ -72,7 +72,7 @@ public class BodyDetection : MonoBehaviour {
 }
 
 
-
+#if UNITY_EDITOR
 #region Debug Editor //allows visualization within the scene viewer
 [CustomEditor(typeof(BodyDetection))]
 public class BodyDetectionEditor : Editor
@@ -91,3 +91,4 @@ public class BodyDetectionEditor : Editor
     }
 }
 #endregion
+#endif

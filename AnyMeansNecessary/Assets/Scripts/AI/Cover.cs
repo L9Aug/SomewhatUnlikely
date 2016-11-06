@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
-
+#endif
 
 /// <summary>
 /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
@@ -115,7 +116,7 @@ public class Cover : MonoBehaviour
 
 }
 
-
+#if UNITY_EDITOR
 #region unityeditor debug visuals
 [CustomEditor(typeof(Cover))]
 public class CompanionHideEditor : Editor
@@ -128,3 +129,4 @@ public class CompanionHideEditor : Editor
     }
 }
 #endregion
+#endif

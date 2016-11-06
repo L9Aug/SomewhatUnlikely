@@ -35,7 +35,8 @@ namespace UMA {
             pistol.transform.SetParent(GunHolder.transform, false);
 
             umaData.gameObject.GetComponent<PlayerController>().CurrentWeapon = pistol.GetComponent<Gun>();
-            print(umaData.gameObject.GetComponent<PlayerController>());
+            pistol.GetComponent<Gun>().updateWeapon = FindObjectOfType<UIElements>().UpdateWeaponStats;
+            //print(umaData.gameObject.GetComponent<PlayerController>());
 
         }
     }

@@ -8,17 +8,15 @@ public class RemoveCursor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-
-#if !UNITY_EDITOR        
+#if !UNITY_EDITOR
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 #endif
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
 
     }
 
