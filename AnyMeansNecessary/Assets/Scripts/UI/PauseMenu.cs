@@ -4,9 +4,11 @@ using System.Collections;
 
 public class PauseMenu : MonoBehaviour {
 
-    public Button Resume;
-    public Button Reload;
-    public Button Quit;
+    public GameObject PauseButtons;
+    public GameObject GamePlayHUD;
+    public GameObject Inventory;
+    public GameObject Map;
+   
     
     // Use this for initialization
     void Start () {
@@ -22,25 +24,32 @@ public class PauseMenu : MonoBehaviour {
             Time.timeScale = 0.0f;
 
         }
+
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            inventoryUp();
+            Time.timeScale = 0.0f;
+        }
     }
 
     void disableButtons()// disables pause menu
     {
-        Resume.gameObject.SetActive(false);
-        Reload.gameObject.SetActive(false);
-        Quit.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+        Inventory.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(true);
+        
 //#if !UNITY_EDITOR
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 //#endif
     }
 
-    void enableButtons()//Function brings the pause menu up
+   void enableButtons()//Function brings the pause menu up
     {
-        Resume.gameObject.SetActive(true);
-        Reload.gameObject.SetActive(true);
-        Quit.gameObject.SetActive(true);
-//#if !UNITY_EDITOR
+        PauseButtons.gameObject.SetActive(true);
+        GamePlayHUD.gameObject.SetActive(false);
+        Inventory.gameObject.SetActive(false);
+        //#if !UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 //#endif
@@ -58,6 +67,20 @@ public class PauseMenu : MonoBehaviour {
         Application.Quit();
         Debug.Log("Is Quitting");
     }
+
+    public void inventoryUp()
+    {
+        Inventory.gameObject.SetActive(true);
+        GamePlayHUD.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
+
+    }
+
 
     public void reloadCheckpoint()//reloads to checkpoint
     {
@@ -77,5 +100,7 @@ public class PauseMenu : MonoBehaviour {
 
         resume();
     }
+
+  
 
 }
