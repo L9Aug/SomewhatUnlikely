@@ -8,6 +8,9 @@ public class PauseMenu : MonoBehaviour {
     public GameObject GamePlayHUD;
     public GameObject Inventory;
     public GameObject Map;
+
+    public GameObject Player;
+    public Camera MapCamera;
    
     
     // Use this for initialization
@@ -30,12 +33,19 @@ public class PauseMenu : MonoBehaviour {
             inventoryUp();
             Time.timeScale = 0.0f;
         }
+
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            mapUp();
+            Time.timeScale = 0.0f;
+        }
     }
 
     void disableButtons()// disables pause menu
     {
         PauseButtons.gameObject.SetActive(false);
         Inventory.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(true);
         
 //#if !UNITY_EDITOR
@@ -49,6 +59,7 @@ public class PauseMenu : MonoBehaviour {
         PauseButtons.gameObject.SetActive(true);
         GamePlayHUD.gameObject.SetActive(false);
         Inventory.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
         //#if !UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -73,6 +84,27 @@ public class PauseMenu : MonoBehaviour {
         Inventory.gameObject.SetActive(true);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
+
+    }
+
+    public void mapUp()
+    {
+        //Displays Map section of the menu and deactivates other elements
+        Map.gameObject.SetActive(true);
+        Inventory.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+
+
+
+        MapCamera.transform.position = new Vector3(Player.transform.position.x,50,Player.transform.position.z);
+        MapCamera.cullingMask |= (1 << 0)|(1<<8)|(1<<9)|(1<<11)|(1<<12);
 
         //#if !UNITY_EDITOR
         Cursor.visible = true;
