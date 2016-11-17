@@ -81,7 +81,6 @@ public class FirstPersonMovement : MonoBehaviour {
     public UnityStandardAssets.Characters.FirstPerson.MouseLook mouseLook = new UnityStandardAssets.Characters.FirstPerson.MouseLook();
     public AdvancedSettings advancedSettings = new AdvancedSettings();
 
-
     private Rigidbody m_RigidBody;
     private CapsuleCollider m_Capsule;
     private float m_YRotation;

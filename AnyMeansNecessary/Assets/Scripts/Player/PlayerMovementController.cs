@@ -39,7 +39,7 @@ public class PlayerMovementController : MonoBehaviour {
     void BeginThirdPersonState()
     {
         //m_FPM.enabled = false;
-        m_TPM.enabled = true;
+        //m_TPM.enabled = true;
     }
 
     void ThirdPersonStateUpdate()
@@ -65,7 +65,7 @@ public class PlayerMovementController : MonoBehaviour {
 
     void EndFirstPersonState()
     {
-        m_FPM.enabled = false;
+        //m_FPM.enabled = false;
     }
 
     void GoToFirstPersonTransitionFunc()

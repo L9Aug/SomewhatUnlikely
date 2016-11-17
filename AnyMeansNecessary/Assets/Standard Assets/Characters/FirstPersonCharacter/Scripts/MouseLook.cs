@@ -10,8 +10,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public float XSensitivity = 2f;
         public float YSensitivity = 2f;
         public bool clampVerticalRotation = true;
-        public float MinimumX = -90F;
-        public float MaximumX = 90F;
+        public float MinimumX = -45F;
+        public float MaximumX = 45F;
         public bool smooth;
         public float smoothTime = 5f;
         public bool lockCursor = true;
@@ -21,12 +21,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Quaternion m_CameraTargetRot;
         private bool m_cursorIsLocked = true;
 
-        public void Init(Transform character, Transform camera)
+        public void Init(Transform character, Transform camera, float minX, float maxX)
         {
             m_CharacterTargetRot = character.localRotation;
             m_CameraTargetRot = camera.localRotation;
         }
 
+        public void Init(Transform character, Transform camera)
+        {
+            m_CharacterTargetRot = character.localRotation;
+            m_CameraTargetRot = camera.localRotation;
+        }
 
         public void LookRotation(Transform character, Transform camera)
         {
