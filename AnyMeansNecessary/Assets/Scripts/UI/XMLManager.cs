@@ -47,7 +47,9 @@ public class XMLManager : MonoBehaviour {
                                                         tempEnemies[i].transform.rotation,
                                                         tempEnemies[i].GetComponent<HealthComp>().GetHealth(),
                                                         tempEnemies[i].GetComponent<FieldOfView>().detectedtimer,
-                                                        tempEnemies[i].GetComponent<Base_Enemy>()._state));
+                                                        tempEnemies[i].GetComponent<Base_Enemy>()._state,
+                                                        Enemy_Patrol.detected
+                                                        ));
             }  
         }
         instance.enemyDB.PlayerHealth = PlayerController.PC.GetComponent<HealthComp>().GetHealth();
@@ -67,15 +69,16 @@ public class EnemDataToSave
     public float enemHealth;
     public float detectionTimer;
     public Base_Enemy.State enemyState;
+    public bool detected;
 
-    public EnemDataToSave(Vector3 pos,Quaternion rot,float health,float timer, Base_Enemy.State state)
+    public EnemDataToSave(Vector3 pos,Quaternion rot,float health,float timer, Base_Enemy.State state, bool Detected)
     {
         enemPos = pos;
         enemyRot = rot;
         enemHealth = health;
         detectionTimer = timer;
         enemyState = state;
-        
+        detected = Detected;
     }
 
     public EnemDataToSave()

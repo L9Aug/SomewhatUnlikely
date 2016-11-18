@@ -44,6 +44,9 @@ public class HealthComp : MonoBehaviour {
                 h(health, Amount);
             }
         }
-        //print("Hit");
+        if(this.gameObject.tag != "Player")
+        {
+            GetComponent<Enemy_Was_Shot>().Shot();
+        }
     }
 }

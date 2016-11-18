@@ -3,28 +3,10 @@ using System.Collections;
 
 public class Standard_Enemy : Base_Enemy {
 
-    //public State _state;
-
     void Update()
     {
         FSM();
     }
-
-    /*public enum State // basic FSM some states aren't in use.
-    {
-        Patrol,       //patrol for player
-        Chase,        //chase player
-        Attack,       //Attack player if siutation correct
-        wasShot,      //if ai was shot      
-        Dead,         //dead
-        Alerted,      //used when finding bodies
-        InCover,
-    }
-	
-    public void setState(State newState)
-    {
-        _state = newState; // assigns new state based on value inputted.
-    }*/
 
     private void FSM()
     {
