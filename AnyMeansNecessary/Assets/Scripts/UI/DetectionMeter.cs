@@ -6,6 +6,7 @@ public class DetectionMeter : MonoBehaviour {
 
     public Image meter;
     public Camera PlayerCam;
+    
    
 
   public FieldOfView EnemyFOVScript;
@@ -15,6 +16,10 @@ public class DetectionMeter : MonoBehaviour {
 	void Start () {
        
         meter.type = Image.Type.Filled;
+       
+        
+        
+
        
 	}
 	

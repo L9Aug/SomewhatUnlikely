@@ -37,3 +37,5 @@ N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.T
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor.csprojResolveAssemblyReference.cache
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor.dll
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor.pdb
+E:\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor.dll
+E:\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor.pdb

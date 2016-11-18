@@ -35,3 +35,5 @@ N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.T
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor-firstpass.csprojResolveAssemblyReference.cache
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor-firstpass.dll
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor-firstpass.pdb
+E:\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor-firstpass.dll
+E:\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-Editor-firstpass.pdb

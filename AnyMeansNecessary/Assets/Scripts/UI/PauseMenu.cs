@@ -11,11 +11,14 @@ public class PauseMenu : MonoBehaviour {
 
     public GameObject Player;
     public Camera MapCamera;
+
+    
    
     
     // Use this for initialization
     void Start () {
-        disableButtons();       
+        disableButtons();    
+           
 	}
 	
 	// Update is called once per frame
@@ -117,16 +120,22 @@ public class PauseMenu : MonoBehaviour {
     public void reloadCheckpoint()//reloads to checkpoint
     {
         GameObject playerPos = GameObject.FindGameObjectWithTag("Player");
-        GameObject[] enemyPos = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] Enemy = GameObject.FindGameObjectsWithTag("Enemy");
 
-        int arrayLength = enemyPos.Length;
-        for(int i = 0; i < arrayLength; i++)
+        int listSize = XMLManager.instance.enemyDB.enemList.Capacity;
+       for(int i = 0; i < Enemy.Length;i++)
         {
-            enemyPos[i].transform.position = CheckpointScript.EnemyPosition[i];//moves all enemies to stored position when the player reached the chekpoint
-        }
+            Enemy[i].transform.position = XMLManager.instance.enemyDB.enemList[i].enemPos;
+            Enemy[i].GetComponent<AI_Main>()._state = XMLManager.instance.enemyDB.enemList[i].enemyState;
+            Enemy[i].GetComponent<HealthComp>().SetHealth(XMLManager.instance.enemyDB.enemList[i].enemHealth);
+            Enemy[i].GetComponent<FieldOfView>().detectedtimer = XMLManager.instance.enemyDB.enemList[i].detectionTimer;
 
-        playerPos.transform.position = CheckpointScript.GetCheckpointPosition();//moves player to checkpoint position
-        playerPos.GetComponent<HealthComp>().SetHealth(CheckpointScript.storedHealth);
+        }
+        
+       
+
+        playerPos.transform.position = XMLManager.instance.enemyDB.PlayerPos;//moves player to checkpoint position
+        playerPos.GetComponent<HealthComp>().SetHealth(XMLManager.instance.enemyDB.PlayerHealth);
         //UIElements.health = CheckpointScript.storedHealth;// sets health to stored value
         UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value        
 

@@ -42,3 +42,5 @@ N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.N
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
 N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb
+E:\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
+E:\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb
