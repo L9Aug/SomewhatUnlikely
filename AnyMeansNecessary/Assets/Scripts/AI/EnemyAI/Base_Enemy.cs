@@ -15,7 +15,7 @@ public class Base_Enemy : MonoBehaviour
 		Patrol,       //patrol for player
 		Chase,        //chase player
 		Attack,       //Attack player if siutation correct
-		wasShot,      //if ai was shot      
+        wasShot,      //if ai was shot      
 		Dead,         //dead
 		Alerted,      //used when finding bodies
 		InCover,

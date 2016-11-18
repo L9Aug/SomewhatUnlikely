@@ -147,9 +147,11 @@ public class PauseMenu : MonoBehaviour {
 
                 Enemy[i].transform.position = XMLManager.instance.enemyDB.enemList[i].enemPos;
                 Enemy[i].transform.rotation = XMLManager.instance.enemyDB.enemList[i].enemyRot;
+                Enemy[i].GetComponent<Base_Enemy>()._state = Base_Enemy.State.Patrol;
                 Enemy[i].GetComponent<Base_Enemy>()._state = XMLManager.instance.enemyDB.enemList[i].enemyState;
                 Enemy[i].GetComponent<HealthComp>().SetHealth(XMLManager.instance.enemyDB.enemList[i].enemHealth);
                 Enemy[i].GetComponent<FieldOfView>().detectedtimer = XMLManager.instance.enemyDB.enemList[i].detectionTimer;
+                Enemy_Patrol.detected = XMLManager.instance.enemyDB.enemList[i].detected;
                 Enemy[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             }
         }
