@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
     private Animator Anim;
     private Camera PlayerCam;
     private PauseMenu pauseMenu;
+    private PlayerMovementController PMC;
 
     /// <summary>
     /// Player State Machine
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour {
         Anim = GetComponent<Animator>();
         PlayerCam = Camera.main;
         pauseMenu = FindObjectOfType<PauseMenu>();
+        PMC = GetComponent<PlayerMovementController>();
 	}
 	
 	// Update is called once per frame
@@ -116,6 +118,10 @@ public class PlayerController : MonoBehaviour {
 
         TargetAnim.SetTrigger("Takedown"); // trigger teh animations for both the AI and the Player.
         Anim.SetTrigger("Takedown");
+
+        //Put the player into the takedown state
+        PMC.TakedownTarget = Target.transform;
+        PMC.BeginTakedown = true;
     }
 
     void AnimTest()
