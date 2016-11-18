@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Standard_Enemy : MonoBehaviour {
+public class Standard_Enemy : Base_Enemy {
 
-    public State _state;
+    //public State _state;
 
     void Update()
     {
         FSM();
     }
 
-    public enum State // basic FSM some states aren't in use.
+    /*public enum State // basic FSM some states aren't in use.
     {
         Patrol,       //patrol for player
         Chase,        //chase player
@@ -20,10 +20,12 @@ public class Standard_Enemy : MonoBehaviour {
         Alerted,      //used when finding bodies
         InCover,
     }
+	
     public void setState(State newState)
     {
         _state = newState; // assigns new state based on value inputted.
-    }
+    }*/
+
     private void FSM()
     {
         switch (_state)

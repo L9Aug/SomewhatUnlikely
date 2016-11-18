@@ -26,6 +26,8 @@ namespace UMA
 			}
 			rigid.constraints = RigidbodyConstraints.FreezeRotation;
             rigid.mass = 10; // umaData.characterMass;
+            rigid.interpolation = RigidbodyInterpolation.Interpolate;
+            rigid.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
 			var capsule = umaData.gameObject.GetComponent<CapsuleCollider>();
 			if (capsule == null)

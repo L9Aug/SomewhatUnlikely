@@ -73,7 +73,7 @@ public class CameraController : MonoBehaviour {
         CamChangeLerpTimer = Mathf.Clamp(CamChangeLerpTimer, 0, 1);
 
         m_Camera.transform.position = Vector3.Lerp(ThirdPersonTargetPosition, FirstPersonTargetPosition, CamChangeLerpTimer);
-        m_Camera.transform.rotation = Quaternion.Lerp(ThirdPersonTargetRotation, m_Camera.transform.rotation, CamChangeLerpTimer);
+        //m_Camera.transform.rotation = Quaternion.Lerp(ThirdPersonTargetRotation, m_Camera.transform.rotation, CamChangeLerpTimer);
     }
 
     void OnCameraMove()
@@ -87,7 +87,7 @@ public class CameraController : MonoBehaviour {
             ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Sin(HorizontalAngle),
             ThirdPersonCameraDistance * Mathf.Cos(VerticalAngle),
             ThirdPersonCameraDistance * Mathf.Sin(VerticalAngle) * Mathf.Cos(HorizontalAngle)) + CameraRootObject.position;
-        ThirdPersonTargetRotation = Quaternion.LookRotation(CameraRootObject.position - ThirdPersonTargetPosition);
+        ThirdPersonTargetRotation = Quaternion.identity;
     }
 
     void UpdateFirstPersonCameraPosition()
@@ -147,9 +147,9 @@ public class CameraController : MonoBehaviour {
 
         if (InvertMouse) VerticalDelta *= -1;
 
-        HorizontalAngle += HorizontalDelta;
+        HorizontalAngle = transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
 
-        VerticalAngle += VerticalDelta;
+        VerticalAngle = transform.rotation.eulerAngles.x * Mathf.Deg2Rad;
 
         VerticalAngle = Mathf.Clamp(VerticalAngle, -((Mathf.PI * 3f) / 4f), -(Mathf.PI / 4f));
 

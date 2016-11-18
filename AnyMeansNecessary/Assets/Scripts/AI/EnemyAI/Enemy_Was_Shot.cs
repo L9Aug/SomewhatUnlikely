@@ -18,26 +18,30 @@ public class Enemy_Was_Shot : MonoBehaviour {
         GetComponent<HealthComp>().healthChanged.Add(HealthUpdate);
     }
 
-    void HealthUpdate(float health)
+    void HealthUpdate(float health, float ChangeInHealth)
     {
         Agent.speed = 1;
         playerLastPos = Player.transform.position;
 
-        if (gameObject.tag == "StandardEnemy")
+        if (ChangeInHealth < 0)
         {
-            GetComponent<Standard_Enemy>().setState(Standard_Enemy.State.wasShot);
+            if (gameObject.tag == "StandardEnemy")
+            {
+                GetComponent<Standard_Enemy>().setState(Standard_Enemy.State.wasShot);
+            }
+            else if (gameObject.tag == "Sniper")
+            {
+                GetComponent<Sniper_Enemy>().setState(Sniper_Enemy.State.wasShot);
+            }
+            else if (gameObject.tag == "ArmoredEnemy")
+            {
+            }
+            else if (gameObject.tag == "Hunter")
+            {
+                GetComponent<Hunter_Enemy>().setState(Hunter_Enemy.State.Dead);
+            }
         }
-        else if (gameObject.tag == "Sniper")
-        {
-            GetComponent<Sniper_Enemy>().setState(Sniper_Enemy.State.wasShot);
-        }
-        else if (gameObject.tag == "ArmoredEnemy")
-        {
-        }
-        else if (gameObject.tag == "Hunter")
-        {
-            GetComponent<Hunter_Enemy>().setState(Hunter_Enemy.State.Dead);
-        }
+
         if (health <= 0)
         {
             Agent.velocity = Vector3.zero; // stops ai from sliding to last set destination
@@ -53,6 +57,7 @@ public class Enemy_Was_Shot : MonoBehaviour {
             }
             else if (gameObject.tag == "ArmoredEnemy")
             {
+
             }
             else if (gameObject.tag == "Hunter")
             {

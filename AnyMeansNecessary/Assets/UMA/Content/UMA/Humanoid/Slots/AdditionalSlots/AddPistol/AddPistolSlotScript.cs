@@ -16,7 +16,7 @@ namespace UMA {
 
             foreach (Transform t in children)
             {
-                if (t.name == "RightHand")
+                if (t.name == "hand_R")
                 {
                     RightHand = t;
                     break;
@@ -24,14 +24,14 @@ namespace UMA {
             }
 
             GameObject GunHolder = new GameObject();
-            GunHolder.transform.position = new Vector3(0.0864f, 0.045f, -0.01f);
-            GunHolder.transform.rotation = Quaternion.Euler(0.128f, -2.693f, 2.593f);
+            GunHolder.transform.position = Vector3.zero;
+            GunHolder.transform.rotation = Quaternion.identity;
             GunHolder.transform.SetParent(RightHand, false);
 
             GameObject pistol = (GameObject)Instantiate(Pistol, Vector3.zero, Quaternion.identity);
 
-            pistol.transform.position = new Vector3(-0.1924f, 0, 0);
-            pistol.transform.rotation = Quaternion.Euler(0, -90f, 0);
+            pistol.transform.position = new Vector3(-0.0901f, -0.0428f, 0.03421f);
+            pistol.transform.rotation = Quaternion.Euler(184.443f, 91.212f, -15.281f);
             pistol.transform.SetParent(GunHolder.transform, false);
 
             umaData.gameObject.GetComponent<PlayerController>().CurrentWeapon = pistol.GetComponent<Gun>();

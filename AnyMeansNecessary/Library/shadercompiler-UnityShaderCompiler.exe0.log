@@ -1,2 +1,34 @@
-Base path: C:/Program Files/Unity/Editor/Data
+Base path: D:/Unity/Editor/Data
 Cmd: getPlatforms
+Cmd: preprocess
+  insize=581 outsize=578 ok=1
+Cmd: preprocess
+  insize=1898 outsize=898 ok=1
+Cmd: preprocess
+  insize=1083 outsize=1638 ok=1
+Cmd: preprocess
+  insize=2399 outsize=1392 ok=1
+Cmd: preprocess
+  insize=1048 outsize=1687 ok=1
+Cmd: preprocess
+  insize=2421 outsize=1396 ok=1
+Cmd: preprocess
+  insize=1898 outsize=898 ok=1
+Cmd: preprocess
+  insize=534 outsize=156 ok=1
+Cmd: preprocess
+  insize=520 outsize=157 ok=1
+Cmd: preprocess
+  insize=560 outsize=1117 ok=1
+Cmd: preprocess
+  insize=1335 outsize=1778 ok=1
+Cmd: compileSnippet
+  error: 1 plat 1 at (53): comma expression used where a vector constructor may have been intended\nCompiling Vertex program
+Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING
+  error: 1 plat 1 at (53): potentially unintended use of a comma expression in a return statement\nCompiling Vertex program
+Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING
+  api=1 type=0 insize=787 outsize=340 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=818 outsize=340 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=818 outsize=396 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING ok=1

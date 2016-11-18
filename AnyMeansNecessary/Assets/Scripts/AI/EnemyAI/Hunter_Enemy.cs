@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Hunter_Enemy : MonoBehaviour {
+public class Hunter_Enemy : Base_Enemy {
 
-    public State _state;
+    //public State _state;
 
     // Use this for initialization
     void Start () {
@@ -16,7 +16,7 @@ public class Hunter_Enemy : MonoBehaviour {
 	}
 
 
-    public enum State // basic FSM some states aren't in use.
+    /*public enum State // basic FSM some states aren't in use.
     {
         Patrol,       //patrol for player
         Chase,       //Attack player if siutation correct
@@ -27,7 +27,7 @@ public class Hunter_Enemy : MonoBehaviour {
     public void setState(State newState)
     {
         _state = newState; // assigns new state based on value inputted.
-    }
+    }*/
 
     private void FSM()
     {

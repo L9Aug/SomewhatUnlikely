@@ -21,7 +21,7 @@ public class CivilianAI_Main : MonoBehaviour {
         hidePoints[3] = GameObject.Find("HideLocations 4").transform;
     }
 
-    void HealthTest(float health)
+    void HealthTest(float health, float ChangeInHealth)
     {
         setState(State.FLEE);
         if (health <= 0)

@@ -105,7 +105,7 @@ public class UIElements : MonoBehaviour {
         }
     }
 
-    public void UpdateHealth(float Health)
+    public void UpdateHealth(float Health, float ChangeInHealth)
     {
         healthBar.value = Health;
     }

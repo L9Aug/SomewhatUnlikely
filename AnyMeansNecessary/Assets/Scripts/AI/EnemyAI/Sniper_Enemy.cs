@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Sniper_Enemy : MonoBehaviour {
+public class Sniper_Enemy : Base_Enemy {
 
-    public State _state;
+    //public State _state;
     GameObject Player;
 
     void Start()
@@ -16,7 +16,7 @@ public class Sniper_Enemy : MonoBehaviour {
         FSM();
     }
 
-    public enum State // basic FSM some states aren't in use.
+    /*public enum State // basic FSM some states aren't in use.
     {
         Patrol,       //patrol for player
         Chase,       //Attack player if siutation correct
@@ -24,10 +24,11 @@ public class Sniper_Enemy : MonoBehaviour {
         InCover,
         Dead,
     }
+	
     public void setState(State newState)
     {
         _state = newState; // assigns new state based on value inputted.
-    }
+    }*/
 
     private void FSM()
     {
