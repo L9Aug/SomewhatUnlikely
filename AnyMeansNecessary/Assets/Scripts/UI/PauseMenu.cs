@@ -4,13 +4,21 @@ using System.Collections;
 
 public class PauseMenu : MonoBehaviour {
 
-    public Button Resume;
-    public Button Reload;
-    public Button Quit;
+    public GameObject PauseButtons;
+    public GameObject GamePlayHUD;
+    public GameObject Inventory;
+    public GameObject Map;
+
+    public GameObject Player;
+    public Camera MapCamera;
+
+    
+   
     
     // Use this for initialization
     void Start () {
-        disableButtons();       
+        disableButtons();    
+           
 	}
 	
 	// Update is called once per frame
@@ -22,25 +30,40 @@ public class PauseMenu : MonoBehaviour {
             Time.timeScale = 0.0f;
 
         }
+
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            inventoryUp();
+            Time.timeScale = 0.0f;
+        }
+
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            mapUp();
+            Time.timeScale = 0.0f;
+        }
     }
 
     void disableButtons()// disables pause menu
     {
-        Resume.gameObject.SetActive(false);
-        Reload.gameObject.SetActive(false);
-        Quit.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+        Inventory.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(true);
+        
 //#if !UNITY_EDITOR
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 //#endif
     }
 
-    void enableButtons()//Function brings the pause menu up
+   void enableButtons()//Function brings the pause menu up
     {
-        Resume.gameObject.SetActive(true);
-        Reload.gameObject.SetActive(true);
-        Quit.gameObject.SetActive(true);
-//#if !UNITY_EDITOR
+        PauseButtons.gameObject.SetActive(true);
+        GamePlayHUD.gameObject.SetActive(false);
+        Inventory.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
+        //#if !UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 //#endif
@@ -59,23 +82,66 @@ public class PauseMenu : MonoBehaviour {
         Debug.Log("Is Quitting");
     }
 
+    public void inventoryUp()
+    {
+        Inventory.gameObject.SetActive(true);
+        GamePlayHUD.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
+
+    }
+
+    public void mapUp()
+    {
+        //Displays Map section of the menu and deactivates other elements
+        Map.gameObject.SetActive(true);
+        Inventory.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+
+
+
+        MapCamera.transform.position = new Vector3(Player.transform.position.x,50,Player.transform.position.z);
+        MapCamera.cullingMask |= (1 << 0)|(1<<8)|(1<<9)|(1<<11)|(1<<12);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
+
+    }
+
+
     public void reloadCheckpoint()//reloads to checkpoint
     {
         GameObject playerPos = GameObject.FindGameObjectWithTag("Player");
-        GameObject[] enemyPos = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] Enemy = GameObject.FindGameObjectsWithTag("Enemy");
 
-        int arrayLength = enemyPos.Length;
-        for(int i = 0; i < arrayLength; i++)
+        int listSize = XMLManager.instance.enemyDB.enemList.Capacity;
+       for(int i = 0; i < Enemy.Length;i++)
         {
-            enemyPos[i].transform.position = CheckpointScript.EnemyPosition[i];//moves all enemies to stored position when the player reached the chekpoint
-        }
+            Enemy[i].transform.position = XMLManager.instance.enemyDB.enemList[i].enemPos;
+            Enemy[i].GetComponent<AI_Main>()._state = XMLManager.instance.enemyDB.enemList[i].enemyState;
+            Enemy[i].GetComponent<HealthComp>().SetHealth(XMLManager.instance.enemyDB.enemList[i].enemHealth);
+            Enemy[i].GetComponent<FieldOfView>().detectedtimer = XMLManager.instance.enemyDB.enemList[i].detectionTimer;
 
-        playerPos.transform.position = CheckpointScript.GetCheckpointPosition();//moves player to checkpoint position
-        playerPos.GetComponent<HealthComp>().SetHealth(CheckpointScript.storedHealth);
+        }
+        
+       
+
+        playerPos.transform.position = XMLManager.instance.enemyDB.PlayerPos;//moves player to checkpoint position
+        playerPos.GetComponent<HealthComp>().SetHealth(XMLManager.instance.enemyDB.PlayerHealth);
         //UIElements.health = CheckpointScript.storedHealth;// sets health to stored value
         UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value        
 
         resume();
     }
+
+  
 
 }
