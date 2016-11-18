@@ -17,22 +17,39 @@ public class FieldOfView : MonoBehaviour
     public float viewAngle;
     public LayerMask targetMask;
     public LayerMask obstacleMask;
+    private int shootRange;
 
     public static float detectionTimer = 1.5f;
     public float detectedtimer = 0;
-    NavMeshAgent Agent;
-    public GameObject Player;
+    private GameObject Player;
     private Vector3 distToPlayer;
 
-    private Animator Anim;
     public Gun CurrentWeapon;
+    Animator Anim;
     void Start()
     {
         Anim = GetComponent<Animator>();
-        Agent = GetComponent<NavMeshAgent>();
+        Player = GameObject.Find("Player");
+        //just a core range based on the enemy type
+        if (gameObject.tag == "StandardEnemy")
+        {
+            shootRange = 10;
+        }
+        else if (gameObject.tag == "Sniper")
+        {
+            shootRange = 100;
+        }
+        else if (gameObject.tag == "ArmoredEnemy")
+        {
+            shootRange = 15;
+        }
+        else if (gameObject.tag == "Hunter")
+        {
+            shootRange = 10;
+        }
     }
 
-   public bool FindVisibleTargets()
+    public bool FindVisibleTargets()
     {
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask); //creates sphare collider using view radius and the target mask(player) for it to collide with and stores hits as an array
         for (int i = 0; i < targetsInViewRadius.Length; i++) // checks list of targets placed based on whats in the colliding sphare.
@@ -41,22 +58,38 @@ public class FieldOfView : MonoBehaviour
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2) // determines if player/body is inside the viewing angle
             {
                 float dstToTarget = Vector3.Distance(transform.position, targetsInViewRadius[i].transform.position); // detemines distance for raycast lenght
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask)) //raycast setout to check if obstacles(walls etc) are in way of player
+                if (!Physics.Raycast(transform.position + new Vector3(0, 1.7f, 0), dirToTarget, dstToTarget, obstacleMask)) //raycast setout to check if obstacles(walls etc) are in way of player
                 {
-                    if(targetsInViewRadius[i].gameObject.tag == "Player")
+                    if (targetsInViewRadius[i].gameObject.tag == "Player")
                     {
-                        Debug.DrawLine(transform.position, targetsInViewRadius[i].transform.position, Color.green); //simple debug to see that the player has been seen within the scene
+                        Debug.DrawLine(transform.position+ new Vector3(0, 1.7f, 0), targetsInViewRadius[i].transform.position, Color.green); //simple debug to see that the player has been seen within the scene
                         if (detectedtimer >= detectionTimer)
                         {
                             distToPlayer = transform.position - Player.transform.position;
-                            if (distToPlayer.magnitude < 10)
-                            { 
+                            if (distToPlayer.magnitude < shootRange)
+                            {
                                 if (CurrentWeapon.Fire(targetsInViewRadius[i].transform.position, 1 << 8, 0, true))
                                 {
                                     Anim.SetTrigger("Fire");
                                 }
-                             }
-                            GetComponent<AI_Main>().setState(AI_Main.State.Chase); //tells ai to chase player
+                            }
+
+                            if (gameObject.tag == "StandardEnemy")
+                            {
+                                GetComponent<Standard_Enemy>().setState(Standard_Enemy.State.Chase);
+                            }
+                            else if (gameObject.tag == "Sniper")
+                            {
+                                GetComponent<Sniper_Enemy>().setState(Sniper_Enemy.State.Chase);
+                            }
+                            else if (gameObject.tag == "ArmoredEnemy")
+                            {
+                            }
+                            else if (gameObject.tag == "Hunter")
+                            {
+                                GetComponent<Hunter_Enemy>().setState(Hunter_Enemy.State.Chase);
+                            }
+
                             return true; // returns true and sets static "detected" from ai.main to true via checklost function to make all ai chase the player
                         }
                         else
@@ -73,15 +106,12 @@ public class FieldOfView : MonoBehaviour
         return false; // returns boolean for ai.main checklost function.
     }
 
-
     // for fov editor
     public Vector3 DirFromAngle(float angleInDegrees)
     {
         angleInDegrees += transform.eulerAngles.y;
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
-
-
 }
 
 #if UNITY_EDITOR

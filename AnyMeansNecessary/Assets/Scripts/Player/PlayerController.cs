@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour {
     {
         GameObject TakedownTarget = CheckTakedownFOV();
 
-        if(TakedownTarget != null && !AI_Main.detected)
+        if(TakedownTarget != null && !Enemy_Patrol.detected)
         {
             CanTakedown = true;
         }
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour {
         float Takedown = Random.Range(0, 2); // select at random the takedown to use
         Animator TargetAnim = Target.GetComponent<Animator>(); // get the animator of the AI
 
-        Target.GetComponent<AI_Main>().setState(AI_Main.State.Dead); // turn off the AI
+        Target.GetComponent<Standard_Enemy>().setState(Standard_Enemy.State.Dead); // turn off the AI
 
         TargetAnim.applyRootMotion = false;
         //Anim.applyRootMotion = true;
