@@ -16,7 +16,7 @@ namespace UMA {
 
             foreach (Transform t in children)
             {
-                if (t.name == "RightHand")
+                if (t.name == "hand_R")
                 {
                     RightHand = t;
                     break;

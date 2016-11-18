@@ -81,7 +81,6 @@ public class FirstPersonMovement : MonoBehaviour {
     public UnityStandardAssets.Characters.FirstPerson.MouseLook mouseLook = new UnityStandardAssets.Characters.FirstPerson.MouseLook();
     public AdvancedSettings advancedSettings = new AdvancedSettings();
 
-
     private Rigidbody m_RigidBody;
     private CapsuleCollider m_Capsule;
     private float m_YRotation;
@@ -117,6 +116,7 @@ public class FirstPersonMovement : MonoBehaviour {
     private void Start()
     {
         m_RigidBody = GetComponent<Rigidbody>();
+        m_RigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         m_Capsule = GetComponent<CapsuleCollider>();
         cam = Camera.main;
         mouseLook.Init(transform, cam.transform);
@@ -124,6 +124,7 @@ public class FirstPersonMovement : MonoBehaviour {
         FirstPersonHeadBob HB = cam.GetComponent<FirstPersonHeadBob>();
         HB.rigidbodyFirstPersonController = this;
         anim = GetComponent<Animator>();
+        anim.applyRootMotion = false;
     }
 
     private void OnEnable()

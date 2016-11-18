@@ -12,53 +12,71 @@ public class PlayerController : MonoBehaviour {
     private Animator Anim;
     private Camera PlayerCam;
     private PauseMenu pauseMenu;
+    private PlayerMovementController PMC;
+
+    /// <summary>
+    /// Player State Machine
+    /// </summary>
+    private StateMachine PSM;
+
+    private bool Dying = false;
+
+    public bool Revived = false;
+
+    private float DeathTimer = 0;
+    private float DeathLength = 5;
 
 	// Use this for initialization
 	void Start ()
     {
+        SetupStateMachine();
         Anim = GetComponent<Animator>();
         PlayerCam = Camera.main;
         pauseMenu = FindObjectOfType<PauseMenu>();
+        PMC = GetComponent<PlayerMovementController>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        WeaponChecks();
-        TakedownCheck();
+        PSM.SMUpdate();
 	}
 
     public void HealthCheck(float Health)
     {
         if(Health <= 0)
         {
-            pauseMenu.reloadCheckpoint();
+            Dying = true;
         }
     }
 
     void WeaponChecks()
     {
-        if (Input.GetButton("Fire"))
+        if (Time.timeScale > 0.01)
         {
-            // 1 << 10 is the AI layer.
-            if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, true))
+            if (Input.GetButton("Fire"))
             {
-                Anim.SetTrigger("Fire");
+                // 1 << 10 is the AI layer.
+                if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, true))
+                {
+                    Anim.SetTrigger("Fire");
+                }
             }
-        }
 
-        if (Input.GetButton("Reload"))
-        {
-            CurrentWeapon.Reload();
+            if (Input.GetButton("Reload"))
+            {
+                CurrentWeapon.Reload();
+            }
         }
     }
 
     Vector3 GunTarget()
     {
-        Ray CameraRay = PlayerCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray CameraRay = PlayerCam.ScreenPointToRay(new Vector3(0.5f * PlayerCam.pixelWidth, 0.5f * PlayerCam.pixelHeight, 0));
         RaycastHit hit;
         LayerMask mask = 1 << 8; // 1 << 8 is the player layer.
         mask = ~mask; // flip the mask to hit all but the player.
+        Debug.DrawRay(CameraRay.origin, CameraRay.direction * 10f, Color.red, 1);
         if(Physics.Raycast(CameraRay, out hit, 1000f, mask))
         {
             return hit.point;
@@ -100,6 +118,10 @@ public class PlayerController : MonoBehaviour {
 
         TargetAnim.SetTrigger("Takedown"); // trigger teh animations for both the AI and the Player.
         Anim.SetTrigger("Takedown");
+
+        //Put the player into the takedown state
+        PMC.TakedownTarget = Target.transform;
+        PMC.BeginTakedown = true;
     }
 
     void AnimTest()
@@ -167,4 +189,127 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
+
+    private void BeginActive()
+    {
+
+    }
+
+    private void ActiveUpdate()
+    {
+        WeaponChecks();
+        TakedownCheck();
+    }
+
+    private void EndActive()
+    {
+
+    }
+
+    private void BeginDead()
+    {
+        DeathTimer = DeathLength;
+    }
+
+    private void DeadUpdate()
+    {
+        DeathTimer -= Time.deltaTime;
+        if(DeathTimer <= 0)
+        {
+            pauseMenu.reloadCheckpoint();
+        }
+    }
+
+    private void EndDead()
+    {
+        Dying = false;
+    }
+
+    private void DyingTransFunc()
+    {
+        Anim.SetBool("Dying", true);
+        //Dying = false;
+    }
+
+    private void RevivedTransFunc()
+    {
+        Anim.SetBool("Dying", false);
+        Revived = false;
+    }
+
+    private bool DyingCheck()
+    {
+        return Dying;
+    }
+
+    private bool RevivedCheck()
+    {
+        return Revived;
+    }
+
+    void SetupStateMachine()
+    {
+        // Create Machine.
+        PSM = new StateMachine();
+
+        // Create States.
+        State Active = new State();
+        State Dead = new State();
+
+
+        // Create Transitions.
+        Transition dying = new Transition();
+        Transition revived = new Transition();
+
+        // Add states to state machine.
+        PSM.States.Add(Active);
+        PSM.States.Add(Dead);
+
+        // Set up initial State.
+        PSM.InitialState = PSM.States[0];
+
+        // Assign actions to states.
+        Active.EntryActions.Add(BeginActive);
+        Active.Actions.Add(ActiveUpdate);
+        Active.ExitActions.Add(EndActive);
+        Dead.EntryActions.Add(BeginDead);
+        Dead.Actions.Add(DeadUpdate);
+        Dead.ExitActions.Add(EndDead);
+
+        // Assign transitions to states.
+        Active.Transitions.Add(dying);
+        Dead.Transitions.Add(revived);
+
+        // Assign actions to transitions.
+        dying.Actions.Add(DyingTransFunc);
+        revived.Actions.Add(RevivedTransFunc);
+
+        // Assign target states to transitions.
+        dying.TargetState = Dead;
+        revived.TargetState = Active;
+
+        // Configure conditions for transitions.
+        BoolCondition IsDying = new BoolCondition();
+        IsDying.Condition = DyingCheck;
+        dying.condition = IsDying;
+
+        BoolCondition IsRevived = new BoolCondition();
+        IsRevived.Condition = RevivedCheck;
+        revived.condition = IsRevived;
+
+        // Assign state names.
+        Active.StateName = "Active";
+        Dead.StateName = "Dead";
+
+        // Assign Transition names.
+        dying.TransistionName = "Dying";
+        revived.TransistionName = "Revived";
+
+        // Set if you want the machine to print messages.
+        PSM.PrintMessages = false;
+
+        // Initialize the machine.
+        PSM.InitMachine();
+    }
+
 }

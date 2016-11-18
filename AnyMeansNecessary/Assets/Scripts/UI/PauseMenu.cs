@@ -20,7 +20,6 @@ public class PauseMenu : MonoBehaviour {
         {
             enableButtons();            
             Time.timeScale = 0.0f;
-
         }
     }
 
@@ -72,8 +71,9 @@ public class PauseMenu : MonoBehaviour {
 
         playerPos.transform.position = CheckpointScript.GetCheckpointPosition();//moves player to checkpoint position
         playerPos.GetComponent<HealthComp>().SetHealth(CheckpointScript.storedHealth);
+        if (CheckpointScript.storedHealth > 0) playerPos.GetComponent<PlayerController>().Revived = true;
         //UIElements.health = CheckpointScript.storedHealth;// sets health to stored value
-        UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value        
+        UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value       
 
         resume();
     }
