@@ -7,7 +7,7 @@ public class HealthComp : MonoBehaviour {
     public float MaxHealth;
     float health;
 
-    public delegate void HealthChanged(float Health);
+    public delegate void HealthChanged(float Health, float ChangeInHealth);
     public List<HealthChanged> healthChanged = new List<HealthChanged>();
 
 	// Use this for initialization
@@ -20,15 +20,16 @@ public class HealthComp : MonoBehaviour {
     {
         return health;
     }
-
+    
     public void SetHealth(float Value)
     {
+        float DeltaHealth = Value - health;
         health = Value;
         if (healthChanged.Count > 0)
         {
             foreach (HealthChanged h in healthChanged)
             {
-                h(health);
+                h(health, DeltaHealth);
             }
         }
     }
@@ -40,9 +41,12 @@ public class HealthComp : MonoBehaviour {
         {
             foreach(HealthChanged h in healthChanged)
             {
-                h(health);
+                h(health, Amount);
             }
         }
-        //print("Hit");
+        if(this.gameObject.tag != "Player" && health > 0 && gameObject.tag != "Civilian")
+        {
+            GetComponent<Enemy_Was_Shot>().Shot();
+        }
     }
 }

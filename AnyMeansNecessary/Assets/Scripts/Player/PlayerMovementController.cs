@@ -7,54 +7,62 @@ public class PlayerMovementController : MonoBehaviour {
     /// Player Movement State Machine
     /// </summary>
     StateMachine PMSM;
-    bool CamModeChange = false;
-
+    public bool BeginTakedown = false;
     public FirstPersonMovement m_FPM;
-    public ThirdPersonMovement m_TPM;
+    private Animator anim;
 
     public static bool PlayerCrouching = false;
+
+    public Transform TakedownTarget;
+
+    private Vector3 TargetPosition;
+    private Quaternion TargetRotation;
+
+    private UIElements uiElements;
 
 	// Use this for initialization
 	void Start () {
         SetupStateMachine();
-        CamModeChange = true;
+        anim = GetComponent<Animator>();
+        uiElements = FindObjectOfType<UIElements>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        TestForCamModeChange();
         PMSM.SMUpdate();
 	}
 
-    void TestForCamModeChange()
+    #region PMSM Functions
+
+    void BeginTakedownState()
     {
-        if (Input.GetButtonDown("CamSwitch"))
+
+    }
+
+    void TakedownStateUpdate()
+    {
+        if(TakedownTarget != null)
         {
-            CamModeChange = true;
+            TargetPosition = TakedownTarget.position + (Quaternion.FromToRotation(Vector3.forward, TakedownTarget.forward) * new Vector3(-0.14f, 0, -1.183f));
+            TargetRotation = TakedownTarget.rotation;
+
+            UpdatePlayerTransform();
         }
     }
 
-    #region PMSM Functions
-
-    void BeginThirdPersonState()
+    void UpdatePlayerTransform()
     {
-        //m_FPM.enabled = false;
-        m_TPM.enabled = true;
+        transform.position = Vector3.Lerp(transform.position, TargetPosition, Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, Time.deltaTime);
     }
 
-    void ThirdPersonStateUpdate()
+    void EndTakedownState()
     {
-
-    }
-
-    void EndThirdPersonState()
-    {
-        m_TPM.enabled = false;
+        uiElements.xpGain(25);
     }
 
     void BeginFirstPersonState()
     {
-        //m_TPM.enabled = false;
         m_FPM.enabled = true;
     }
 
@@ -68,26 +76,27 @@ public class PlayerMovementController : MonoBehaviour {
         m_FPM.enabled = false;
     }
 
-    void GoToFirstPersonTransitionFunc()
+    void BeginTakedownTransitionFunc()
     {
-
+        BeginTakedown = false;
     }
 
-    void GoToThirdPersonTransitionFunc()
+    void EndTakedownTransitionFunc()
     {
-
-    }
-
-    void ResetCamSwitchBool()
-    {
-        CamModeChange = false;
+        BeginTakedown = false;
+        TakedownTarget = null;
     }
 
     #region PMSM Condition Functions
 
-    bool ChangeCamMode()
+    bool TestAnimTag()
     {
-        return CamModeChange;
+        return (!anim.GetCurrentAnimatorStateInfo(2).IsTag("InTakedown") && anim.GetCurrentAnimatorStateInfo(2).normalizedTime < 0.5f) || (TakedownTarget == null);
+    }
+
+    bool TakedownTest()
+    {
+        return BeginTakedown && (TakedownTarget != null);
     }
 
     #endregion
@@ -98,54 +107,56 @@ public class PlayerMovementController : MonoBehaviour {
         PMSM = new StateMachine();
 
         // Create States
-        State ThirdPersonState = new State();
+        State TakedownState = new State();
         State FirstPersonState = new State();
 
         // Create Transistions
-        Transition GoToFirst = new Transition();
-        Transition GoToThird = new Transition();
+        Transition BeginTakedown = new Transition();
+        Transition EndTakedown = new Transition();
 
         // Add States to Machine
-        PMSM.States.Add(ThirdPersonState);
         PMSM.States.Add(FirstPersonState);
+        PMSM.States.Add(TakedownState);
 
         // Assign Initial State
         PMSM.InitialState = PMSM.States[0];
 
         // Assign Actions to States
-        ThirdPersonState.EntryActions.Add(BeginThirdPersonState);
-        ThirdPersonState.Actions.Add(ThirdPersonStateUpdate);
-        ThirdPersonState.ExitActions.Add(EndThirdPersonState);
+        TakedownState.EntryActions.Add(BeginTakedownState);
+        TakedownState.Actions.Add(TakedownStateUpdate);
+        TakedownState.ExitActions.Add(EndTakedownState);
         FirstPersonState.EntryActions.Add(BeginFirstPersonState);
         FirstPersonState.Actions.Add(FirstPersonStateUpdate);
         FirstPersonState.ExitActions.Add(EndFirstPersonState);
 
         // Assign Transitions to States
-        ThirdPersonState.Transitions.Add(GoToFirst);
-        FirstPersonState.Transitions.Add(GoToThird);
+        TakedownState.Transitions.Add(EndTakedown);
+        FirstPersonState.Transitions.Add(BeginTakedown);
 
         // Assign Actions to Transitions
-        GoToFirst.Actions.Add(GoToFirstPersonTransitionFunc);
-        GoToThird.Actions.Add(GoToThirdPersonTransitionFunc);
-        GoToFirst.Actions.Add(ResetCamSwitchBool);
-        GoToThird.Actions.Add(ResetCamSwitchBool);
+        BeginTakedown.Actions.Add(BeginTakedownTransitionFunc);
+        EndTakedown.Actions.Add(EndTakedownTransitionFunc);
 
         // Assign Target States to Transitions
-        GoToFirst.TargetState = FirstPersonState;
-        GoToThird.TargetState = ThirdPersonState;
+        BeginTakedown.TargetState = TakedownState;
+        EndTakedown.TargetState = FirstPersonState;
 
         // Configure Conditions For Transitions
-        BoolCondition CamSwitchCond = new BoolCondition();
-        CamSwitchCond.Condition = ChangeCamMode;
-        GoToFirst.condition = GoToThird.condition = CamSwitchCond;
+        BoolCondition BeginTakedownCond = new BoolCondition();
+        BeginTakedownCond.Condition = TakedownTest;
+        BeginTakedown.condition = BeginTakedownCond;
+
+        BoolCondition EndTakedownCond = new BoolCondition();
+        EndTakedownCond.Condition = TestAnimTag;
+        EndTakedown.condition = EndTakedownCond;
 
         // Assign Each State a Name
-        ThirdPersonState.StateName = "Third Person Mode";
-        FirstPersonState.StateName = "First Person Mode";
+        TakedownState.StateName = "Takedown Mode";
+        FirstPersonState.StateName = "User Control";
 
         // Assign each Trnsition a Name
-        GoToFirst.TransistionName = "Going To First Person Mode";
-        GoToThird.TransistionName = "Going To Third Person Mode";
+        BeginTakedown.TransistionName = "Begin Takedown";
+        EndTakedown.TransistionName = "End Takedown";
 
         // Set if the Machine should print Messages
         PMSM.PrintMessages = false;

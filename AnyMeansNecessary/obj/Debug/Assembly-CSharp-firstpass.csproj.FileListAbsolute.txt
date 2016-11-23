@@ -20,25 +20,69 @@ C:\Users\Lee\Documents\GitHub\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\
 C:\Users\Lee\Documents\GitHub\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 C:\Users\Lee\Documents\GitHub\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\Lee\Documents\GitHub\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\LitJson.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Unity.SerializationLogic.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Unity.DataContract.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\ICSharpCode.NRefactory.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Unity.UNetWeaver.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Unity.CecilTools.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Pdb.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Mdb.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.xml
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.xml
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.xml
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.xml
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
-N:\Desktop\RIGPR\SomewhatUnlikely\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\LitJson.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.SerializationLogic.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.DataContract.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.UNetWeaver.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.CecilTools.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.xml
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.xml
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.xml
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.xml
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
+C:\New folder\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\LitJson.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.SerializationLogic.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.DataContract.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.UNetWeaver.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.CecilTools.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.xml
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.xml
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.xml
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.xml
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
+D:\up690813\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\LitJson.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.SerializationLogic.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.DataContract.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.UNetWeaver.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Unity.CecilTools.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.xml
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEditor.xml
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.UI.xml
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\Temp\bin\Debug\UnityEngine.Networking.xml
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.dll
+D:\up723163\SomewhatUnlikely-lees-sprint-3\SomewhatUnlikely-lees-sprint-3\AnyMeansNecessary\obj\Debug\Assembly-CSharp-firstpass.pdb

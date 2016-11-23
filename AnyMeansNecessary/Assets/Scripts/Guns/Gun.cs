@@ -16,6 +16,8 @@ public class Gun : MonoBehaviour {
     // the range of the gun.
     public float Range = 1000f;
 
+    float BulletPathDisplayTime = 0.5f;
+
     bool Reloading = false;
     float reloadTimer = 0;
 
@@ -58,15 +60,15 @@ public class Gun : MonoBehaviour {
                     //can fire
                     RaycastHit hit = new RaycastHit();
                     Vector3 bulletEndDestination = Target() + (Varience * Random.insideUnitSphere);
-                    hit.point = bulletEndDestination;
                     Ray BulletPath = new Ray(Muzzle.position, (bulletEndDestination - Muzzle.position).normalized);
-                    if (Physics.Raycast(BulletPath, out hit, Range, TargetLayer))
+                    hit.point = BulletPath.origin + (BulletPath.direction * Range);
+                    if (Physics.Raycast(BulletPath, out hit, Range, TargetLayer, QueryTriggerInteraction.Ignore))
                     {
                         hit.collider.SendMessage("Hit", Damage, SendMessageOptions.DontRequireReceiver);
                     }
                     if (DebugDraw) Debug.DrawLine(BulletPath.origin, hit.point, Color.green, 1f);
                     //if (DebugDraw) Debug.DrawRay(BulletPath.origin, BulletPath.direction * Range, Color.green, 1f);
-                    if (InGameDraw) DrawBulletPathInGame(BulletPath, 1000f); // comming soon if wanted
+                    if (InGameDraw) DrawBulletPathInGame(Muzzle, hit.point); // comming soon if wanted
                     FiredGun();
                     return true;
                 }
@@ -99,15 +101,15 @@ public class Gun : MonoBehaviour {
                     //can fire
                     RaycastHit hit = new RaycastHit();
                     Vector3 bulletEndDestination = Target + (Varience * Random.insideUnitSphere);
-                    hit.point = bulletEndDestination;
                     Ray BulletPath = new Ray(Muzzle.position, (bulletEndDestination - Muzzle.position).normalized);
-                    if (Physics.Raycast(BulletPath, out hit, Range, TargetLayer))
+                    hit.point = BulletPath.origin + (BulletPath.direction * Range);
+                    if (Physics.Raycast(BulletPath, out hit, Range, TargetLayer, QueryTriggerInteraction.Ignore))
                     {
                         hit.collider.SendMessage("Hit", Damage, SendMessageOptions.DontRequireReceiver);
                     }
                     if (DebugDraw) Debug.DrawLine(BulletPath.origin, hit.point, Color.green, 1f);
                     //if (DebugDraw) Debug.DrawRay(BulletPath.origin, BulletPath.direction * Range, Color.green, 1f);
-                    if (InGameDraw) DrawBulletPathInGame(BulletPath, 1000f); // comming soon if wanted
+                    if (InGameDraw) DrawBulletPathInGame(Muzzle, hit.point);
                     FiredGun();
                     return true;
                 }
@@ -128,14 +130,10 @@ public class Gun : MonoBehaviour {
         StartCoroutine(CooldownTick());
     }
 
-    /// <summary>
-    /// Comming soon if people want it to.
-    /// </summary>
-    /// <param name="bulletPath"></param>
-    /// <param name="BulletLength"></param>
-    void DrawBulletPathInGame(Ray bulletPath, float BulletLength)
+    void DrawBulletPathInGame(Transform StartPos, Vector3 EndPos)
     {
-
+        BulletTrail bt = Instantiate<BulletTrail>(Resources.Load<BulletTrail>("BulletTrail"));
+        bt.SetupBulletTrial(StartPos, EndPos, BulletPathDisplayTime);
     }
 
     void CallUpdateWeapon()

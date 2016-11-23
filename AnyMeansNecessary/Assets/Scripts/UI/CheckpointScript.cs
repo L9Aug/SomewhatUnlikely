@@ -7,12 +7,15 @@ public class CheckpointScript : MonoBehaviour {
     public static float storedHealth;
     public static int storedXp;
     public static GameObject[] checkPointList;
-   
     public static Vector3 []EnemyPosition ;
+
+   
     // Use this for initialization
     void Start () {
         checkPointList = GameObject.FindGameObjectsWithTag("Checkpoint"); //Finds all the checkpoints in the level by searching for the tag	
         EnemyPosition =  new Vector3[GameObject.FindGameObjectsWithTag("Enemy").Length];
+
+       // XMLManager.instance.enemyDB.enemList = new System.Collections.Generic.List<EnemDataToSave>(GameObject.FindGameObjectsWithTag("Enemy").Length);
     }
 
     private void ActivateCheckpoint()//creates an active chekpoint, active chekpoint position data is the data that will be stored
@@ -44,17 +47,17 @@ public class CheckpointScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider checkpointCollider)//stores all required data on collision with the checkpoints trigger area
     {
-        if(checkpointCollider.tag == "Player")
+        if (!checkpointCollider.isTrigger)
         {
-            ActivateCheckpoint();
-            int arrayLength = EnemyPosition.Length;
-            for(int i = 0; i < arrayLength; i++)
+            if (checkpointCollider.tag == "Player")
             {
-                EnemyPosition[i] = GameObject.FindGameObjectsWithTag("Enemy")[i].transform.position; 
-            }
-            storedHealth = checkpointCollider.GetComponent<HealthComp>().GetHealth();
-            storedXp = UIElements.xp;           
+                ActivateCheckpoint();
+                XMLManager.instance.xmlstoredata();
+                XMLManager.instance.saveEnemy();
 
+            }
         }
     }
+
 }
+
