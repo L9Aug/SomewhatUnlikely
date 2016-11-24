@@ -6,18 +6,20 @@ public class PauseMenu : MonoBehaviour {
 
     public GameObject PauseButtons;
     public GameObject GamePlayHUD;
-    public GameObject Inventory;
+    public GameObject InventoryScreen;
     public GameObject Map;
+    public GameObject InventoryElements;
 
     public GameObject Player;
     public Camera MapCamera;
 
-    
+    Vector3 StartPos;
    
     
     // Use this for initialization
     void Start () {
-        disableButtons();    
+        disableButtons();
+        
            
 	}
 	
@@ -53,9 +55,11 @@ public class PauseMenu : MonoBehaviour {
     void disableButtons()// disables pause menu
     {
         PauseButtons.gameObject.SetActive(false);
-        Inventory.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(true);
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+        
         
 //#if !UNITY_EDITOR
         Cursor.visible = false;
@@ -67,8 +71,11 @@ public class PauseMenu : MonoBehaviour {
     {
         PauseButtons.gameObject.SetActive(true);
         GamePlayHUD.gameObject.SetActive(false);
-        Inventory.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100,2000,0);
+       
         //#if !UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -90,10 +97,11 @@ public class PauseMenu : MonoBehaviour {
 
     public void inventoryUp()
     {
-        Inventory.gameObject.SetActive(true);
+        InventoryScreen.gameObject.SetActive(true);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+        InventoryElements.GetComponent<RectTransform>().localPosition = Vector3.zero;
 
         //#if !UNITY_EDITOR
         Cursor.visible = true;
@@ -106,9 +114,11 @@ public class PauseMenu : MonoBehaviour {
     {
         //Displays Map section of the menu and deactivates other elements
         Map.gameObject.SetActive(true);
-        Inventory.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+        
 
 
 

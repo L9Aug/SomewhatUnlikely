@@ -10,6 +10,9 @@ public class UIElements : MonoBehaviour {
     private float level = 1;
     private bool healthloss;
     private bool swapWeapon;
+    
+
+    public GameObject inventoryItems;
 
     public Slider healthBar;
     public Slider xpBar;
@@ -59,10 +62,7 @@ public class UIElements : MonoBehaviour {
         */
 
         // if(objComplete == true) 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            toggleObjective(true);
-        }
+      
 
         if(Input.GetKeyDown(KeyCode.Y))
         {
@@ -168,5 +168,13 @@ public class UIElements : MonoBehaviour {
         }
     }
 
-   
+    public void InventoryTransformDown()
+    {
+            inventoryItems.GetComponent<RectTransform>().localPosition = new Vector3(0, 500, 0);
+    }
+
+    public void InventoryTransformUp()
+    {
+        inventoryItems.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+    }
 }
