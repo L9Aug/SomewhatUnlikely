@@ -4,211 +4,379 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public delegate void Action();
-
-public class StateMachine
+namespace SM
 {
 
-    public List<State> States = new List<State>();
-    public State InitialState;
+    public delegate void Action();
 
-    public State CurrentState;
-
-    Transition triggeredTransition;
-
-    public bool PrintMessages = true;
-
-    public void InitMachine()
+    public class StateMachine
     {
-        CurrentState = InitialState;
-        for (int i = 0; i < CurrentState.EntryActions.Count; ++i)
+
+        public List<State> States = new List<State>();
+        public State InitialState;
+        public State CurrentState;
+
+        private Transition triggeredTransition;
+
+        /// <summary>
+        /// Constructor for StateMachine
+        /// </summary>
+        /// <param name="initialState">The state that the machine should start on, if null will start at the first state passed in.</param>
+        /// <param name="states">The states this machine will have.</param>
+        public StateMachine(State initialState, List<State> states)
         {
-            CurrentState.EntryActions[i]();
+            SetupMachine(initialState, states.ToArray());
         }
-        if(PrintMessages) Debug.Log(CurrentState.StateName);
-    }
 
-    public void SMUpdate()
-    {
-        triggeredTransition = null;
-        List<Action> ReturnList = new List<Action>();
-
-        // Go through each possible transition until one if found to be triggered.
-        foreach (Transition transition in CurrentState.Transitions)
+        /// <summary>
+        /// Constructor for StateMachine
+        /// </summary>
+        /// <param name="initialState">The state that the machine should start on, if null will start at the first state passed in.</param>
+        /// <param name="states">The states this machine will have.</param>
+        public StateMachine(State initialState, params State[] states)
         {
-            if (transition.IsTriggered)
+            SetupMachine(initialState, states);
+        }
+
+        public void InitMachine()
+        {
+            CurrentState = InitialState;
+
+            foreach (Action action in CurrentState.EntryActions)
             {
-                triggeredTransition = transition;
-                break;
+                action();
             }
         }
 
-        // If a transition has been triggered queue up the necessary actions.
-        if (triggeredTransition != null)
+        public void SMUpdate()
         {
-            State targetState = triggeredTransition.TargetState;
-            ReturnList.AddRange(CurrentState.ExitActions);
-            ReturnList.AddRange(triggeredTransition.Actions);
-            ReturnList.AddRange(targetState.EntryActions);
+            triggeredTransition = null;
+            List<Action> ReturnList = new List<Action>();
 
-            CurrentState = targetState;
+            // Go through each possible transition until one if found to be triggered.
+            foreach (Transition transition in CurrentState.Transitions)
+            {
+                if (transition.IsTriggered)
+                {
+                    triggeredTransition = transition;
+                    break;
+                }
+            }
 
-            if (PrintMessages) Debug.Log(triggeredTransition.TransistionName);
-            if (PrintMessages) Debug.Log(CurrentState.StateName);
+            // If a transition has been triggered queue up the necessary actions.
+            if (triggeredTransition != null)
+            {
+                State targetState = triggeredTransition.TargetState;
+
+                if (CurrentState.ExitActions.Count > 0)
+                {
+                    ReturnList.AddRange(CurrentState.ExitActions);
+                }
+
+                if (triggeredTransition.Actions.Count > 0)
+                {
+                    ReturnList.AddRange(triggeredTransition.Actions);
+                }
+
+                if (targetState.EntryActions.Count > 0)
+                {
+                    ReturnList.AddRange(targetState.EntryActions);
+                }
+
+                CurrentState = targetState;
+            }
+            else // If no transition has happened continue with this states actions.
+            {
+                if (CurrentState.Actions.Count > 0)
+                {
+                    ReturnList.AddRange(CurrentState.Actions);
+                }
+            }
+
+            foreach (Action a in ReturnList)
+            {
+                a();
+            }
         }
-        else // If no transition has happened continue with this states actions.
+
+        public string GetCurrentState()
         {
-            ReturnList.AddRange(CurrentState.Actions);
+            return CurrentState.Name;
         }
 
-        foreach(Action a in ReturnList)
+        private void SetupMachine(State initialState, State[] states)
         {
-            a();
+            States.AddRange(states);
+
+            if (initialState != null)
+            {
+                InitialState = initialState;
+            }
+            else
+            {
+                InitialState = States[0];
+            }
         }
     }
-}
 
-public interface ICondition
-{
-    bool Test();
-}
-
-public class State
-{
-    public string StateName;
-    public List<Transition> Transitions = new List<Transition>();
-    public List<Action> EntryActions = new List<Action>();
-    public List<Action> Actions = new List<Action>();
-    public List<Action> ExitActions = new List<Action>();
-}
-
-public class Transition
-{
-    public string TransistionName;
-    public List<Action> Actions = new List<Action>();
-    State targetState;
-    public ICondition condition;
-
-    public State TargetState
+    public class State
     {
-        get
+        public string Name;
+        public List<Transition> Transitions = new List<Transition>();
+        public List<Action> EntryActions = new List<Action>();
+        public List<Action> Actions = new List<Action>();
+        public List<Action> ExitActions = new List<Action>();
+
+        /// <summary>
+        /// Constructor for State
+        /// </summary>
+        /// <param name="name">The name of the state.</param>
+        /// <param name="transitions">A list of transitions that this state has.</param>
+        /// <param name="entryActions">A list of this states entry actions.</param>
+        /// <param name="actions">A list of this states actions.</param>
+        /// <param name="exitActions">A list of this states exit actions.</param>
+        public State(string name, List<Transition> transitions, List<Action> entryActions, List<Action> actions, List<Action> exitActions)
         {
-            return targetState;
+            SetupState(name,
+                (transitions != null) ? transitions.ToArray() : null,
+                (entryActions != null) ? entryActions.ToArray() : null,
+                (actions != null) ? actions.ToArray() : null,
+                (exitActions != null) ? exitActions.ToArray() : null);
         }
-        set
+
+        /// <summary>
+        /// Constructor for State
+        /// </summary>
+        /// <param name="name">The name of the state.</param>
+        /// <param name="transitions">A list of transitions that this state has.</param>
+        /// <param name="entryActions">A list of this states entry actions.</param>
+        /// <param name="actions">A list of this states actions.</param>
+        /// <param name="exitActions">A list of this states exit actions.</param>
+        public State(string name, Transition[] transitions, Action[] entryActions, Action[] actions, Action[] exitActions)
         {
-            targetState = value;
+            SetupState(name, transitions, entryActions, actions, exitActions);
         }
-    }
-    public bool IsTriggered
-    {
-        get
+
+        private void SetupState(string name, Transition[] transitions, Action[] entryActions, Action[] actions, Action[] exitActions)
         {
-            return condition.Test();
+            Name = name;
+            SetupTransitions(transitions);
+            SetupEntryActions(entryActions);
+            SetupActions(actions);
+            SetupExitActions(exitActions);
+        }
+
+        private void SetupTransitions(Transition[] transitions)
+        {
+            if (transitions != null)
+            {
+                if (transitions.Length > 0)
+                {
+                    Transitions.AddRange(transitions);
+                }
+            }
+        }
+
+        private void SetupEntryActions(Action[] entryActions)
+        {
+            if (entryActions != null)
+            {
+                if (entryActions.Length > 0)
+                {
+                    EntryActions.AddRange(entryActions);
+                }
+            }
+        }
+
+        private void SetupActions(Action[] actions)
+        {
+            if (actions != null)
+            {
+                if (actions.Length > 0)
+                {
+                    Actions.AddRange(actions);
+                }
+            }
+        }
+
+        private void SetupExitActions(Action[] exitActions)
+        {
+            if (exitActions != null)
+            {
+                if (exitActions.Length > 0)
+                {
+                    ExitActions.AddRange(exitActions);
+                }
+            }
+        }
+
+    }
+
+    public class Transition
+    {
+        public string Name;
+        public List<Action> Actions = new List<Action>();
+        public Condition.ICondition TransitionCondition;
+        public State TargetState;
+
+        /// <summary>
+        /// Constructor for Transition (Don't forget to add the Target state after states have been made)
+        /// </summary>
+        /// <param name="name">The name of the transition</param>
+        /// <param name="condition">The condition for the transition to fire.</param>
+        /// <param name="actions">Any actions that should be performed whist transitioning.</param>
+        public Transition(string name, Condition.ICondition condition, List<Action> actions)
+        {
+            SetupTransition(name, condition, actions.ToArray());
+        }
+
+        /// <summary>
+        /// Constructor for Transition (Don't forget to add the Target state after states have been made)
+        /// </summary>
+        /// <param name="name">The name of the transition</param>
+        /// <param name="condition">The condition for the transition to fire.</param>
+        /// <param name="actions">Any actions that should be performed whist transitioning.</param>
+        public Transition(string name, Condition.ICondition condition, params Action[] actions)
+        {
+            SetupTransition(name, condition, actions);
+        }
+
+        public void SetTargetState(State targetState)
+        {
+            TargetState = targetState;
+        }
+
+        public bool IsTriggered
+        {
+            get
+            {
+                return TransitionCondition.Test();
+            }
+        }
+
+        private void SetupTransition(string name, Condition.ICondition condition, Action[] actions)
+        {
+            Name = name;
+            TransitionCondition = condition;
+            if (actions.Length > 0)
+            {
+                Actions.AddRange(actions);
+            }
         }
     }
+
 }
 
-/// <summary>
-/// Test Value between Min and Max values
-/// </summary>
-public class FloatCondition : ICondition
+
+namespace Condition
 {
-    public float MinValue;
-    public float MaxValue;
 
-    public delegate float FloatParam();
-    public FloatParam TestValue;
-
-    bool ICondition.Test()
+    public interface ICondition
     {
-        return (MinValue <= TestValue()) && (TestValue() <= MaxValue);
+        bool Test();
     }
-}
 
-/// <summary>
-/// A less than or equal to B
-/// </summary>
-public class LessThanFloatCondition : ICondition
-{
-    public delegate float FloatParam();
-    public FloatParam A;
-    public FloatParam B;
-
-    bool ICondition.Test()
+    /// <summary>
+    /// Test Value between Min and Max values
+    /// </summary>
+    public class FloatCondition : ICondition
     {
-        return A() <= B();
+        public float MinValue;
+        public float MaxValue;
+
+        public delegate float FloatParam();
+        public FloatParam TestValue;
+
+        bool ICondition.Test()
+        {
+            return (MinValue <= TestValue()) && (TestValue() <= MaxValue);
+        }
     }
-}
 
-/// <summary>
-/// A greater than or equal to B
-/// </summary>
-public class GreaterThanFloatCondition : ICondition
-{
-    public delegate float FloatParam();
-    public FloatParam A;
-    public FloatParam B;
-
-    bool ICondition.Test()
+    /// <summary>
+    /// A less than or equal to B
+    /// </summary>
+    public class LessThanFloatCondition : ICondition
     {
-        return A() >= B();
+        public delegate float FloatParam();
+        public FloatParam A;
+        public FloatParam B;
+
+        bool ICondition.Test()
+        {
+            return A() <= B();
+        }
     }
-}
 
-public class BoolCondition : ICondition
-{
-    public delegate bool BoolParam();
-    public BoolParam Condition;
-
-    bool ICondition.Test()
+    /// <summary>
+    /// A greater than or equal to B
+    /// </summary>
+    public class GreaterThanFloatCondition : ICondition
     {
-        return Condition();
+        public delegate float FloatParam();
+        public FloatParam A;
+        public FloatParam B;
+
+        bool ICondition.Test()
+        {
+            return A() >= B();
+        }
     }
-}
 
-public class AndCondition : ICondition
-{
-    public ICondition ConditionA;
-    public ICondition ConditionB;
-
-    bool ICondition.Test()
+    public class BoolCondition : ICondition
     {
-        return ConditionA.Test() && ConditionB.Test();
+        public delegate bool BoolParam();
+        public BoolParam Condition;
+
+        bool ICondition.Test()
+        {
+            return Condition();
+        }
     }
-}
 
-public class OrCondition : ICondition
-{
-    public ICondition ConditionA;
-    public ICondition ConditionB;
-
-    bool ICondition.Test()
+    public class AndCondition : ICondition
     {
-        return ConditionA.Test() || ConditionB.Test();
+        public ICondition ConditionA;
+        public ICondition ConditionB;
+
+        bool ICondition.Test()
+        {
+            return ConditionA.Test() && ConditionB.Test();
+        }
     }
-}
 
-public class NotCondition : ICondition
-{
-    public ICondition Condition;
-
-    bool ICondition.Test()
+    public class OrCondition : ICondition
     {
-        return !Condition.Test();
+        public ICondition ConditionA;
+        public ICondition ConditionB;
+
+        bool ICondition.Test()
+        {
+            return ConditionA.Test() || ConditionB.Test();
+        }
     }
-}
 
-/// <summary>
-/// True if null
-/// </summary>
-public class NullCondition : ICondition
-{
-    public delegate Object ObjectParam();
-    public ObjectParam Condition;
-
-    bool ICondition.Test()
+    public class NotCondition : ICondition
     {
-        return Condition() == null;
+        public ICondition Condition;
+
+        bool ICondition.Test()
+        {
+            return !Condition.Test();
+        }
+    }
+
+    /// <summary>
+    /// True if null
+    /// </summary>
+    public class NullCondition : ICondition
+    {
+        public delegate object ObjectParam();
+        public ObjectParam Condition;
+
+        bool ICondition.Test()
+        {
+            return Condition() == null;
+        }
     }
 }

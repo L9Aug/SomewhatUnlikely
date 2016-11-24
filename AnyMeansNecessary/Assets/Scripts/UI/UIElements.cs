@@ -21,6 +21,8 @@ public class UIElements : MonoBehaviour {
     public Texture tranqPistol;
     public RawImage weaponImage;
 
+    float requiredXpForLevel;
+
     // Use this for initialization
     void Start () {
         ammoCount.text = ammo.ToString() + "/30";
@@ -29,10 +31,10 @@ public class UIElements : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //healthBar.value = health;
-        float requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
+        requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
         xpBar.value = (xp / requiredXpForLevel) * 100;
 
-#region keyintputs 
+        #region keyintputs 
         /*
         //if(healthUsed == true)
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -57,7 +59,7 @@ public class UIElements : MonoBehaviour {
         */
 
         // if(objComplete == true) 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             toggleObjective(true);
         }
@@ -154,15 +156,15 @@ public class UIElements : MonoBehaviour {
         }
     }
 
-    private void xpGain(int gain,float requiredXP) // call this function with the amount of xp you wish to add for the player and the requiredXpforLevel float
+    public void xpGain(int gain) // call this function with the amount of xp you wish to add for the player and the requiredXpforLevel float
     {
         //next level equation is 25n^2 + 25n + 50
         xp += gain;
-       
-        if (xp == requiredXP)
+        
+        if (xp >= requiredXpForLevel)
         {
             level++;
-            xp = 0;  //if we want pool to reset for each level
+            xp = (int)(xp % requiredXpForLevel);  //if we want pool to reset for each level
         }
     }
 

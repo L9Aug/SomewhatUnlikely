@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
-/// </summary>
-/// 
+    /// <summary>
+    /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+    /// </summary>
+    /// 
 public class Enemy_Was_Shot : MonoBehaviour {
-
+    private GameObject canvas;
     NavMeshAgent Agent;
     private GameObject Player;
     private Vector3 playerLastPos;
 
     // Use this for initialization
     void Start () {
+        canvas = GameObject.Find("mainCanvas");
         Player = GameObject.Find("Player"); // for who you want the ai to chase
         Agent = GetComponent<NavMeshAgent>();
         GetComponent<HealthComp>().healthChanged.Add(HealthUpdate);
@@ -23,10 +24,12 @@ public class Enemy_Was_Shot : MonoBehaviour {
     {
         if (health <= 0)
         {
+            canvas.GetComponent<UIElements>().xpGain(15);
+            Base_Enemy.killCount++;
             Agent.velocity = Vector3.zero; // stops ai from sliding to last set destination
             if (gameObject.tag == "StandardEnemy")
             {
-                GetComponent<Standard_Enemy>().setState(Base_Enemy.State.Dead);
+                GetComponent<Standard_Enemy>().setState(Standard_Enemy.State.Dead);
 
             }
             else if (gameObject.tag == "Sniper")

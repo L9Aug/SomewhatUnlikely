@@ -24,7 +24,7 @@ public class FieldOfView : MonoBehaviour
     private GameObject Player;
     private Vector3 distToPlayer;
 
-    public Gun CurrentWeapon;
+    public BaseGun CurrentWeapon;
     Animator Anim;
     void Start()
     {
@@ -58,17 +58,17 @@ public class FieldOfView : MonoBehaviour
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2) // determines if player/body is inside the viewing angle
             {
                 float dstToTarget = Vector3.Distance(transform.position, targetsInViewRadius[i].transform.position); // detemines distance for raycast lenght
-                if (!Physics.Raycast(transform.position + new Vector3(0, 1.7f, 0), dirToTarget, dstToTarget, obstacleMask)) //raycast setout to check if obstacles(walls etc) are in way of player
+                if (!Physics.Raycast(transform.position + new Vector3(0, 1.7f, 0), dirToTarget + new Vector3(0, 1.4f, 0), dstToTarget, obstacleMask)) //raycast setout to check if obstacles(walls etc) are in way of player
                 {
                     if (targetsInViewRadius[i].gameObject.tag == "Player")
                     {
-                        Debug.DrawLine(transform.position+ new Vector3(0, 1.7f, 0), targetsInViewRadius[i].transform.position, Color.green); //simple debug to see that the player has been seen within the scene
+                        Debug.DrawLine(transform.position+ new Vector3(0, 1.7f, 0), targetsInViewRadius[i].transform.position + new Vector3(0, 1.4f, 0), Color.green); //simple debug to see that the player has been seen within the scene
                         if (detectedtimer >= detectionTimer)
                         {
                             distToPlayer = transform.position - Player.transform.position;
                             if (distToPlayer.magnitude < shootRange)
                             {
-                                if (CurrentWeapon.Fire(targetsInViewRadius[i].transform.position, 1 << 8, 0, true))
+                                if (CurrentWeapon.Fire(targetsInViewRadius[i].transform.position + new Vector3(0, 1.4f, 0), 1 << 8, 1, true, true))
                                 {
                                     Anim.SetTrigger("Fire");
                                 }

@@ -3,6 +3,11 @@ using System.Collections;
 
 public class Standard_Enemy : Base_Enemy {
 
+    /// <summary>
+    /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+    /// </summary>
+
+
     void Update()
     {
         FSM();
@@ -34,6 +39,7 @@ public class Standard_Enemy : Base_Enemy {
                 break;
 
             case State.Dead:
+                Agent.Stop();
                 break;
 
             case State.Alerted:

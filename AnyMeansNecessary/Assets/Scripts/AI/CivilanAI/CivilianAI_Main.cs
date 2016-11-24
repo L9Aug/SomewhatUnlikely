@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+    /// <summary>
+    /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+    /// </summary>
+
 public class CivilianAI_Main : MonoBehaviour {
     public static bool Scared = false;
     public State _state;
@@ -46,6 +50,7 @@ public class CivilianAI_Main : MonoBehaviour {
                 Flee();
                 break;
             case State.DEAD:
+                Agent.Stop();
                 break;
         }
     }

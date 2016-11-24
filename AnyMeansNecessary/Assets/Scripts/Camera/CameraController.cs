@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour {
 
-    StateMachine CameraStates;
+    public SM.StateMachine CameraStates;
 
     Camera m_Camera;
 
@@ -12,7 +12,12 @@ public class CameraController : MonoBehaviour {
     public float ThirdPersonCameraDistance;
     public Vector3 ThirdPersonAnchor;
 
-    ThirdPersonMovement m_ThirdPersonMovement;
+    public UMARecipeBase FirstPersonRecipe;
+    public UMARecipeBase ThirdPersonRecipe;
+
+    private UMA.UMAData umaData;
+    private UMA.SlotData[] slotData;
+    private UMA.SlotData[] firstPersonSlots;
 
     Transform CameraRootObject;
 
@@ -37,7 +42,7 @@ public class CameraController : MonoBehaviour {
 	void Start ()
     {
         m_Camera = Camera.main;
-        m_ThirdPersonMovement = GetComponent<ThirdPersonMovement>();
+        umaData = GetComponent<UMA.UMAData>();
 
         GameObject CameraRootObj = new GameObject("Camera Root Obj");
         CameraRootObject = CameraRootObj.transform;
@@ -46,14 +51,12 @@ public class CameraController : MonoBehaviour {
         m_Camera.transform.SetParent(transform, false);
 
         SetupStateMachine();
-        CamModeChange = true;
+        //CamModeChange = true;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        TestForCamModeChange();
-
         CameraStates.SMUpdate();
 	}
 
@@ -61,7 +64,10 @@ public class CameraController : MonoBehaviour {
     {
         if(Input.GetButtonDown("CamSwitch"))
         {
-            CamModeChange = true;
+            if (GetComponent<PlayerMovementController>().PMSM.GetCurrentState() == "Movement" && GetComponent<PlayerController>().PSM.GetCurrentState() == "Active")
+            {
+                CamModeChange = true;
+            }
         }
     }
 
@@ -74,11 +80,6 @@ public class CameraController : MonoBehaviour {
 
         m_Camera.transform.position = Vector3.Lerp(ThirdPersonTargetPosition, FirstPersonTargetPosition, CamChangeLerpTimer);
         //m_Camera.transform.rotation = Quaternion.Lerp(ThirdPersonTargetRotation, m_Camera.transform.rotation, CamChangeLerpTimer);
-    }
-
-    void OnCameraMove()
-    {
-
     }
 
     void UpdateThirdPersonCameraPosition()
@@ -99,7 +100,7 @@ public class CameraController : MonoBehaviour {
         }
 
         FirstPersonTargetPosition = transform.position + FirstPersonPosition + CrouchedDisplacement;
-        m_Camera.GetComponent<FirstPersonHeadBob>().m_OriginalCameraPosition = m_Camera.transform.position;
+        //m_Camera.GetComponent<FirstPersonHeadBob>().m_OriginalCameraPosition = m_Camera.transform.position;
     }
 
     Vector3 GetCrouchedDisplacementVector(Vector3 AnchorPoint)
@@ -107,33 +108,7 @@ public class CameraController : MonoBehaviour {
         return new Vector3(0, (transform.position.y - (transform.position.y + AnchorPoint.y)) / 2f, 0);
     }
 
-    /// <summary>
-    /// Can be toggled with 'L' atm
-    /// </summary>
-    void TestMotionAlignment()
-    {
-        if (PunishMisAlignment)
-        {
-            Vector3 PlayerForward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
-            Vector3 CameraForward = Vector3.Scale(m_Camera.transform.forward, new Vector3(1, 0, 1)).normalized;
-
-            if (Vector3.Angle(PlayerForward, CameraForward) > 80)
-            {
-                m_ThirdPersonMovement.MoveDirectionPunishment = 0.7f;
-            }
-            else
-            {
-                m_ThirdPersonMovement.MoveDirectionPunishment = 1;
-            }
-        }
-    }
-
     #region CameraStateFuctions
-
-    void BeginThirdPersonState()
-    {
-
-    }
 
     void ThirdPersonStateUpdate()
     {
@@ -153,19 +128,13 @@ public class CameraController : MonoBehaviour {
 
         VerticalAngle = Mathf.Clamp(VerticalAngle, -((Mathf.PI * 3f) / 4f), -(Mathf.PI / 4f));
 
-        if ((Mathf.Abs(HorizontalDelta) + Mathf.Abs(VerticalDelta)) > 0.001f) OnCameraMove();
-
         UpdateThirdPersonCameraPosition();
     }
 
     void EndThirdPersonState()
     {
         CamChangeLerpDir = 1;
-    }
-
-    void BeginFirstPersonState()
-    {
-        //m_Camera.transform.rotation = Quaternion.identity;
+        LoadRecipe(FirstPersonRecipe);
     }
 
     void FirstPersonStateUpdate()
@@ -176,16 +145,12 @@ public class CameraController : MonoBehaviour {
     void EndFirstPersonState()
     {
         CamChangeLerpDir = -1;
+        LoadRecipe(ThirdPersonRecipe);
     }
 
-    void GoToFirstPersonTransitionFunc()
+    void LoadRecipe(UMARecipeBase recipe)
     {
-
-    }
-
-    void GoToThirdPersonTransitionFunc()
-    {
-
+        GetComponent<UMADynamicAvatar>().Load(recipe);
     }
 
     void ResetCamSwitchBool()
@@ -204,63 +169,37 @@ public class CameraController : MonoBehaviour {
 
     void SetupStateMachine()
     {
-        // Create Machine
-        CameraStates = new StateMachine();
-
-        // Create States
-        State ThirdPersonState = new State();
-        State FirstPersonState = new State();
+        // Configure Conditions For Transitions
+        Condition.BoolCondition CamSwitchCond = new Condition.BoolCondition();
+        CamSwitchCond.Condition = ChangeCamMode;
 
         // Create Transistions
-        Transition GoToFirst = new Transition();
-        Transition GoToThird = new Transition();
+        SM.Transition GoToFirst = new SM.Transition("Go to first person", CamSwitchCond, ResetCamSwitchBool);
+        SM.Transition GoToThird = new SM.Transition("Go to third person", CamSwitchCond, ResetCamSwitchBool);
 
-        // Add States to Machine
-        CameraStates.States.Add(ThirdPersonState);
-        CameraStates.States.Add(FirstPersonState);
+        // Create States
+        SM.State ThirdPersonState = new SM.State("Third person state",
+            //transitions
+            new List<SM.Transition>() { GoToFirst },
+            //entry actions
+            null,
+            //update actions
+            new List<SM.Action>() { TestForCamModeChange, ThirdPersonStateUpdate, SetCameraPosition },
+            //exit actions
+            new List<SM.Action>() { EndThirdPersonState });
 
-        // Assign Initial State
-        CameraStates.InitialState = CameraStates.States[0];
-
-        // Assign Actions to States
-        ThirdPersonState.EntryActions.Add(BeginThirdPersonState);
-        ThirdPersonState.Actions.Add(ThirdPersonStateUpdate);
-        ThirdPersonState.Actions.Add(SetCameraPosition);
-        ThirdPersonState.ExitActions.Add(EndThirdPersonState);
-        FirstPersonState.EntryActions.Add(BeginFirstPersonState);
-        FirstPersonState.Actions.Add(FirstPersonStateUpdate);
-        FirstPersonState.Actions.Add(SetCameraPosition);
-        FirstPersonState.ExitActions.Add(EndFirstPersonState);
-
-        // Assign Transitions to States
-        ThirdPersonState.Transitions.Add(GoToFirst);
-        FirstPersonState.Transitions.Add(GoToThird);
-
-        // Assign Actions to Transitions
-        GoToFirst.Actions.Add(GoToFirstPersonTransitionFunc);
-        GoToThird.Actions.Add(GoToThirdPersonTransitionFunc);
-        GoToFirst.Actions.Add(ResetCamSwitchBool);
-        GoToThird.Actions.Add(ResetCamSwitchBool);
+        SM.State FirstPersonState = new SM.State("First person state",
+            new List<SM.Transition>() { GoToThird },
+            null,
+            new List<SM.Action>() { TestForCamModeChange, FirstPersonStateUpdate, SetCameraPosition },
+            new List<SM.Action>() { EndFirstPersonState });
 
         // Assign Target States to Transitions
-        GoToFirst.TargetState = FirstPersonState;
-        GoToThird.TargetState = ThirdPersonState;
+        GoToFirst.SetTargetState(FirstPersonState);
+        GoToThird.SetTargetState(ThirdPersonState);
 
-        // Configure Conditions For Transitions
-        BoolCondition CamSwitchCond = new BoolCondition();
-        CamSwitchCond.Condition = ChangeCamMode;
-        GoToFirst.condition = GoToThird.condition = CamSwitchCond;
-
-        // Assign Each State a Name
-        ThirdPersonState.StateName = "Third Person Mode";
-        FirstPersonState.StateName = "First Person Mode";
-
-        // Assign each Trnsition a Name
-        GoToFirst.TransistionName = "Going To First Person Mode";
-        GoToThird.TransistionName = "Going To Third Person Mode";
-
-        // Set if the Machine should print Messages
-        CameraStates.PrintMessages = false;
+        // Create Machine
+        CameraStates = new SM.StateMachine(null, ThirdPersonState, FirstPersonState);
 
         // Start the State Machine
         CameraStates.InitMachine();
