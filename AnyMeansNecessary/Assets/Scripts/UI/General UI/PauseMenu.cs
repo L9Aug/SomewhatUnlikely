@@ -13,14 +13,19 @@ public class PauseMenu : MonoBehaviour {
     public GameObject Player;
     public Camera MapCamera;
 
+    public Button someButton;
+
+    int somechangingNumber;
+
     Vector3 StartPos;
    
     
     // Use this for initialization
     void Start () {
         disableButtons();
-        
+        somechangingNumber = 0;
            
+        someButton.onClick.AddListener(delegate { SomeNumber(somechangingNumber); });
 	}
 	
 	// Update is called once per frame
@@ -50,6 +55,9 @@ public class PauseMenu : MonoBehaviour {
             mapUp();
             Time.timeScale = 0.0f;
         }
+
+        somechangingNumber++;
+
     }
 
     void disableButtons()// disables pause menu
@@ -179,6 +187,11 @@ public class PauseMenu : MonoBehaviour {
         //UIElements.health = CheckpointScript.storedHealth;// sets health to stored value
         UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value 
         PlayerController.PC.transform.position = XMLManager.instance.enemyDB.PlayerPos;//moves player to checkpoint position
+    }
+
+    void SomeNumber(int value)
+    {
+        print(value);
     }
 
 }

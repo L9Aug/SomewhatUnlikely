@@ -37,6 +37,8 @@ public class UIElements : MonoBehaviour {
         requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
         xpBar.value = (xp / requiredXpForLevel) * 100;
 
+
+
         #region keyintputs 
         /*
         //if(healthUsed == true)
@@ -176,5 +178,10 @@ public class UIElements : MonoBehaviour {
     public void InventoryTransformUp()
     {
         inventoryItems.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+    }
+
+    public void SomeValue(int value)
+    {
+        print(value);
     }
 }

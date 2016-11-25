@@ -10,8 +10,8 @@ public class ItemEnum : MonoBehaviour {
     [System.Serializable]
     public enum Item
     {
-        Pistol,
-        SilencedPistol,
+        Pistol = 0,
+        SilencedPistol = 1,
         SniperRifle,
         Explosive,
         TranqPistol,
