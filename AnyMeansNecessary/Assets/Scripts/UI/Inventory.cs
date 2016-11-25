@@ -24,9 +24,13 @@ public class Inventory : MonoBehaviour {
     
 	// Use this for initialization
 	void Start() {
+
        maxWeight = 60;
        WeaponImagePosition = new Vector3(-12, -114, 0);
        HealthImagePosition = new Vector3(-12, -114, 0);
+       DistractionImagePosition = new Vector3(-12, -114, 0);
+       MiscImagePosition = new Vector3(-12, -114, 0);
+       QuestImagePosition = new Vector3(-12, -114, 0);
        ItemDataBase.InventoryDataBase.itemList.ToArray();
         
 	}
@@ -38,12 +42,18 @@ public class Inventory : MonoBehaviour {
             if (weight < maxWeight)
             {
                 AddItem(6);
-                
-                
             }
           
         }
-	}
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (weight < maxWeight)
+            {
+                AddItem(8);
+            }
+
+        }
+    }
 
     void AddItem(int id)
     {
@@ -51,25 +61,17 @@ public class Inventory : MonoBehaviour {
         {
             if (ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Equipable)
             {
-
-                Instantiate(ItemImage, Weapon.transform, false);
-                ItemImage.GetComponent<RectTransform>().localPosition = WeaponImagePosition;
-                ItemImage.GetComponent<Image>().sprite = ItemDataBase.InventoryDataBase.itemList[id].itemSprite;
-                weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-                ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
-                WeaponImagePosition = UpdatePosition(WeaponImagePosition);
+                InstantiateItem(Weapon, WeaponImagePosition, id);
+                WeaponImagePosition = MoveItemImage(WeaponImagePosition);
             }
 
             else if (ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Consumable)
             {
                 if (ItemDataBase.InventoryDataBase.itemList[id].currentStack < 1)
                 {
-                    Instantiate(ItemImage, Health.transform, false);
-                    ItemImage.GetComponent<RectTransform>().localPosition = HealthImagePosition;
-                    ItemImage.GetComponent<Image>().sprite = ItemDataBase.InventoryDataBase.itemList[id].itemSprite;
-                    weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-                    ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
-                    HealthImagePosition = UpdatePosition(HealthImagePosition);
+                    InstantiateItem(Health, HealthImagePosition, id);
+                    HealthImagePosition = MoveItemImage(HealthImagePosition);
+                    ItemImage.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                 }
                 else
                 {
@@ -77,27 +79,51 @@ public class Inventory : MonoBehaviour {
                     weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
                     ItemImage.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                     
+                    
                 }
+            }
+
+            else if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.EquipAndConsume)
+            {
+                InstantiateItem(Distraction, DistractionImagePosition, id);
+                DistractionImagePosition = MoveItemImage(DistractionImagePosition);
+            }
+
+            else if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.misc)
+            {
+                InstantiateItem(Misc, MiscImagePosition, id);
+                MiscImagePosition = MoveItemImage(MiscImagePosition);
+            }
+
+            else
+            {
+                InstantiateItem(Quest, QuestImagePosition, id);
+                QuestImagePosition = MoveItemImage(QuestImagePosition);
             }
         }
     }
 
 
-
-
-    Vector3 UpdatePosition(Vector3 ImagePos)
+    Vector3 MoveItemImage(Vector3 ItemImagePos)
     {
-        ImagePos = ImagePos + new Vector3(165, 0, 0);
-        return ImagePos;
+        ItemImagePos = ItemImagePos + new Vector3(165, 0, 0);
+        return ItemImagePos;
     }
+
+  
 
     void InstantiateItem(RawImage ImageType,Vector3 ImagePosition, int id)
     {
+        ItemImage.GetComponent<Image>().sprite = ItemDataBase.InventoryDataBase.itemList[id].itemSprite;
         Instantiate(ItemImage, ImageType.transform, false);
         ItemImage.GetComponent<RectTransform>().localPosition = ImagePosition;
-        ItemImage.GetComponent<Image>().sprite = ItemDataBase.InventoryDataBase.itemList[id].itemSprite;
+        ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
         weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-        ImagePosition = ImagePosition + new Vector3(165, 0, 0);
+    }
+
+    public void UseItem()
+    {
+            print("used");
     }
     
 

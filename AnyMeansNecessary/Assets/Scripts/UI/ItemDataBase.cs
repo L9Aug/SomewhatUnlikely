@@ -18,6 +18,8 @@ public class ItemDataBase : MonoBehaviour {
            InventoryDataBase.itemList.Add(new Items(newItem[i].name,i,newItem[i].damage,newItem[i].noise,
                                                     newItem[i].value,newItem[i].weight,newItem[i].stack,
                                                     newItem[i].maxStack,newItem[i].description,newItem[i].itemType));
+
+            
         }
 
         print(itemList.Count);

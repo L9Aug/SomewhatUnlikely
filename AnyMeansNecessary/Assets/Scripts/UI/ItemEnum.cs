@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ItemEnum : MonoBehaviour {
 
+    
+
     public Item thisItem;
 
     [System.Serializable]
@@ -20,6 +22,12 @@ public class ItemEnum : MonoBehaviour {
         DistractionBox,
         Key,
         KeyCard,
+        Intel,
+        TranqAmmo,
+        PistolAmmo,
+        SniperAmmo,
+        AssualtRifleAmmo,
+        QuestItem
 
     }
 
