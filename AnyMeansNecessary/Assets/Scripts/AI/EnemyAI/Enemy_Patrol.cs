@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
-/// </summary>
-/// 
+    /// <summary>
+    /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+    /// </summary>
+    /// 
+
 public class Enemy_Patrol : MonoBehaviour {
     public static bool detected = false; // used for informing all enemy ai's if player is detected
     NavMeshAgent Agent;

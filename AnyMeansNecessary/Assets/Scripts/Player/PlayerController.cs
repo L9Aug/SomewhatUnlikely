@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetButton("Fire"))
             {
                 // 1 << 10 is the AI layer.
-                if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, true))
+                if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, false, true))
                 {
                     Anim.SetTrigger("Fire");
                 }
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour {
 
             Target.GetComponent<Base_Enemy>().setState(Base_Enemy.State.Dead); // turn off the AI
             Target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            Target.GetComponent<NavMeshAgent>().speed = 0;
+            Target.GetComponent<NavMeshAgent>().speed = 0;            
 
             TargetAnim.applyRootMotion = false;
             //Anim.applyRootMotion = true;

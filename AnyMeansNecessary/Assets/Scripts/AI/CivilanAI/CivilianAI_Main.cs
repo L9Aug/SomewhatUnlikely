@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+    /// <summary>
+    /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+    /// </summary>
+
 public class CivilianAI_Main : MonoBehaviour {
     public static bool Scared = false;
     public State _state;
@@ -46,6 +50,7 @@ public class CivilianAI_Main : MonoBehaviour {
                 Flee();
                 break;
             case State.DEAD:
+                Agent.Stop();
                 break;
         }
     }
@@ -80,7 +85,7 @@ public class CivilianAI_Main : MonoBehaviour {
                 fleeTimer += Time.deltaTime;
             }
             Agent.speed = 1;
-            Agent.SetDestination(hidePoints[randomHidePoint].position);//picks 1 of the 4 corners from empty gameobjects and runs towards that specific point
+         //   Agent.SetDestination(hidePoints[randomHidePoint].position);//picks 1 of the 4 corners from empty gameobjects and runs towards that specific point
         }
     }
 

@@ -8,7 +8,6 @@ public class PlayerMovementController : MonoBehaviour {
     /// </summary>
     StateMachine PMSM;
     public bool BeginTakedown = false;
-
     public FirstPersonMovement m_FPM;
     private Animator anim;
 
@@ -19,10 +18,13 @@ public class PlayerMovementController : MonoBehaviour {
     private Vector3 TargetPosition;
     private Quaternion TargetRotation;
 
+    private UIElements uiElements;
+
 	// Use this for initialization
 	void Start () {
         SetupStateMachine();
         anim = GetComponent<Animator>();
+        uiElements = FindObjectOfType<UIElements>();
 	}
 	
 	// Update is called once per frame
@@ -56,7 +58,7 @@ public class PlayerMovementController : MonoBehaviour {
 
     void EndTakedownState()
     {
-        
+        uiElements.xpGain(25);
     }
 
     void BeginFirstPersonState()

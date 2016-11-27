@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
-/// </summary>
-/// 
+    /// <summary>
+    /// CODED BY LEE BROOKES - UP687102  - LEEBROOKES@LIVE.COM
+    /// </summary>
+    /// 
 public class Enemy_Was_Shot : MonoBehaviour {
-
     NavMeshAgent Agent;
     private GameObject Player;
-    private Vector3 playerLastPos;
+    public Vector3 playerLastPos;
 
     // Use this for initialization
     void Start () {
@@ -18,37 +17,18 @@ public class Enemy_Was_Shot : MonoBehaviour {
         GetComponent<HealthComp>().healthChanged.Add(HealthUpdate);
     }
 
-
     void HealthUpdate(float health, float ChangeInHealth)
     {
         if (health <= 0)
         {
-            Agent.velocity = Vector3.zero; // stops ai from sliding to last set destination
-            if (gameObject.tag == "StandardEnemy")
-            {
-                GetComponent<Standard_Enemy>().setState(Base_Enemy.State.Dead);
-
-            }
-            else if (gameObject.tag == "Sniper")
-            {
-                GetComponent<Sniper_Enemy>().setState(Base_Enemy.State.Dead);
-            }
-            else if (gameObject.tag == "ArmoredEnemy")
-            {
-
-            }
-            else if (gameObject.tag == "Hunter")
-            {
-                GetComponent<Hunter_Enemy>().setState(Base_Enemy.State.Dead);
-            }
-            GetComponent<Animator>().SetTrigger("Takedown");
+            GetComponent<Base_Enemy>().Killai();
         }
     }
 
     public void Shot()
     {
-        Agent.speed = 1;
-        playerLastPos = Player.transform.position;
+
+        PlayerShotLocation();
         if (gameObject.tag == "StandardEnemy")
         {
             GetComponent<Standard_Enemy>().setState(Base_Enemy.State.wasShot);
@@ -64,37 +44,52 @@ public class Enemy_Was_Shot : MonoBehaviour {
         {
             GetComponent<Hunter_Enemy>().setState(Base_Enemy.State.wasShot);
         }
+        return;
     }
+   private Vector3 distToLastPos;
     public void WasShot()
     {
 
-        Vector3 distToLastPos = transform.position - playerLastPos;
-        if (GetComponent<FieldOfView>().FindVisibleTargets())
-        { //if player comes into view whilst going to last player pos then chase and alert other ai's
-            Agent.velocity = Vector3.zero;
-            if (gameObject.tag == "StandardEnemy")
-            {
-                GetComponent<Standard_Enemy>().setState(Base_Enemy.State.Chase);
-            }
-            else if (gameObject.tag == "Sniper")
-            {
-                GetComponent<Sniper_Enemy>().setState(Base_Enemy.State.Chase);
-            }
-            else if (gameObject.tag == "ArmoredEnemy")
-            {
-            }
-            else if (gameObject.tag == "Hunter")
-            {
-            }
-        }
-        else if (distToLastPos.magnitude < 2 && gameObject.tag != "Sniper") // if within x of where the player shot from and player isnt in seight then return to patroling.
-        {
-            GetComponent<Enemy_Chase>().checkLost(false);
-        }
-        else if (!GetComponent<FieldOfView>().FindVisibleTargets() && gameObject.tag != "Sniper")
-        {
-            Agent.SetDestination(playerLastPos);
-        }
 
+        distToLastPos = transform.position - playerLastPos;
+        Debug.Log(GetComponent<FieldOfView>().FindVisibleTargets());
+        //if (GetComponent<FieldOfView>().FindVisibleTargets())
+        //{ //if player comes into view whilst going to last player pos then chase and alert other ai's
+        //    Agent.velocity = Vector3.zero;
+        //    if (gameObject.tag == "StandardEnemy")
+        //    {
+        //        GetComponent<Standard_Enemy>().setState(Base_Enemy.State.Chase);
+        //    }
+        //    else if (gameObject.tag == "Sniper")
+        //    {
+        //        GetComponent<Sniper_Enemy>().setState(Base_Enemy.State.Chase);
+        //    }
+        //    else if (gameObject.tag == "ArmoredEnemy")
+        //    {
+        //    }
+        //    else if (gameObject.tag == "Hunter")
+        //    {
+
+        //    }
+        //}
+        //else
+        //if (distToLastPos.magnitude < 2 && gameObject.tag != "Sniper") // if within x of where the player shot from and player isnt in seight then return to patroling.
+        //{
+        //    GetComponent<Enemy_Chase>().checkLost(false);
+        //}
+        //else
+        if (gameObject.tag != "Sniper")
+        {
+            Debug.Log(Agent);
+            Agent.speed = 1;
+            GetComponent<NavMeshAgent>().SetDestination(playerLastPos);
+        }
+    }
+
+    private void PlayerShotLocation()
+    {
+        playerLastPos = Vector3.zero;
+        Agent.speed = 1;
+        playerLastPos = Player.transform.position;
     }
 }
