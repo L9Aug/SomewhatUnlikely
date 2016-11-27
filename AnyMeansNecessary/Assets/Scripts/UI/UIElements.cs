@@ -32,6 +32,7 @@ public class UIElements : MonoBehaviour {
 	void Update () {
         //healthBar.value = health;
         requiredXpForLevel = 25 * (Mathf.Pow(level, 2) + level + 2);
+        xp = (int)Mathf.Clamp((int)xp, 0, requiredXpForLevel);
         xpBar.value = (xp / requiredXpForLevel) * 100;
 
         #region keyintputs 

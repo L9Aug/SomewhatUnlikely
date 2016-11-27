@@ -22,16 +22,19 @@ public class FirstPersonMovement : MonoBehaviour {
         public void UpdateDesiredTargetSpeed(Vector2 input)
         {
             if (input == Vector2.zero) return;
+
             if (input.x > 0 || input.x < 0)
             {
                 //strafe
                 CurrentTargetSpeed = StrafeSpeed;
             }
+
             if (input.y < 0)
             {
                 //backwards
                 CurrentTargetSpeed = BackwardSpeed;
             }
+
             if (input.y > 0)
             {
                 //forwards
@@ -47,9 +50,7 @@ public class FirstPersonMovement : MonoBehaviour {
             else
             {
                 m_Running = false;
-            }
-
-            
+            }            
 
             if (PlayerMovementController.PlayerCrouching)
             {
@@ -63,7 +64,6 @@ public class FirstPersonMovement : MonoBehaviour {
         }
     }
 
-
     [System.Serializable]
     public class AdvancedSettings
     {
@@ -74,7 +74,6 @@ public class FirstPersonMovement : MonoBehaviour {
         [Tooltip("set it to 0.1 or more if you get stuck in wall")]
         public float shellOffset; //reduce the radius by that ratio to avoid getting stuck in wall (a value of 0.1f is nice)
     }
-
 
     public Camera cam;
     public MovementSettings movementSettings = new MovementSettings();
@@ -112,7 +111,6 @@ public class FirstPersonMovement : MonoBehaviour {
         }
     }
 
-
     private void Start()
     {
         m_RigidBody = GetComponent<Rigidbody>();
@@ -121,8 +119,6 @@ public class FirstPersonMovement : MonoBehaviour {
         cam = Camera.main;
         mouseLook.Init(transform, cam.transform);
         mouseLook.SetCursorLock(false);
-        FirstPersonHeadBob HB = cam.GetComponent<FirstPersonHeadBob>();
-        HB.rigidbodyFirstPersonController = this;
         anim = GetComponent<Animator>();
         anim.applyRootMotion = false;
     }
@@ -148,18 +144,11 @@ public class FirstPersonMovement : MonoBehaviour {
     {
         RotateView();
 
-        //if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
-        //{
-        //    m_Jump = true;
-        //}
-
         if (Input.GetButtonDown("CrouchToggle"))
         {
             PlayerMovementController.PlayerCrouching = !PlayerMovementController.PlayerCrouching;
         }
-
     }
-
 
     private void FixedUpdate()
     {
@@ -183,8 +172,6 @@ public class FirstPersonMovement : MonoBehaviour {
                 m_RigidBody.AddForce(desiredMove * SlopeMultiplier(), ForceMode.VelocityChange);
             }
         }
-
-
 
         if (m_IsGrounded)
         {
@@ -218,15 +205,22 @@ public class FirstPersonMovement : MonoBehaviour {
 
     }
 
-    private void UpdateAnimator()
+    public void UpdateAnimator()
     {
-        float ForwardMotion = Vector3.Scale(m_RigidBody.velocity, transform.forward).magnitude;
-        anim.SetFloat("Forward", ForwardMotion, 0.1f, Time.deltaTime);
-        anim.SetBool("Crouch", PlayerMovementController.PlayerCrouching);
-        anim.SetBool("OnGround", m_IsGrounded);
-        if (!m_IsGrounded)
+        if (anim != null)
         {
-            anim.SetFloat("Jump", m_RigidBody.velocity.y);
+            float ForwardMotion = Vector3.Scale(m_RigidBody.velocity, transform.forward).magnitude;
+            anim.SetFloat("Forward", ForwardMotion, 0.1f, Time.deltaTime);
+            anim.SetBool("Crouch", PlayerMovementController.PlayerCrouching);
+            anim.SetBool("OnGround", m_IsGrounded);
+            if (!m_IsGrounded)
+            {
+                anim.SetFloat("Jump", m_RigidBody.velocity.y);
+            }
+        }
+        else
+        {
+            anim = GetComponent<Animator>();
         }
     }
 
@@ -235,7 +229,6 @@ public class FirstPersonMovement : MonoBehaviour {
         float angle = Vector3.Angle(m_GroundContactNormal, Vector3.up);
         return movementSettings.SlopeCurveModifier.Evaluate(angle);
     }
-
 
     private void StickToGroundHelper()
     {
@@ -250,7 +243,6 @@ public class FirstPersonMovement : MonoBehaviour {
             }
         }
     }
-
 
     private Vector2 GetInput()
     {

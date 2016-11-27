@@ -37,28 +37,31 @@ public class Base_Enemy : MonoBehaviour
 
     public virtual void Killai()
     {
-        Agent.velocity = Vector3.zero; // stops ai from sliding to last set destination
-        killCount++;
-        canvas.GetComponent<UIElements>().xpGain(15);
+        if (_state != State.Dead)
+        {
+            Agent.velocity = Vector3.zero; // stops ai from sliding to last set destination
+            killCount++;
+            canvas.GetComponent<UIElements>().xpGain(15);
 
-        setState(State.Dead);
-        if (gameObject.tag == "StandardEnemy")
-        {
-            StandardKills++;
-        }
-        else if (gameObject.tag == "Sniper")
-        {
-            sniperKills++;
-        }
-        else if (gameObject.tag == "ArmoredEnemy")
-        {
-            armoredKills++;
-        }
-        else if (gameObject.tag == "Hunter")
-        {
-            hunterKills++;
-        }
+            setState(State.Dead);
+            if (gameObject.tag == "StandardEnemy")
+            {
+                StandardKills++;
+            }
+            else if (gameObject.tag == "Sniper")
+            {
+                sniperKills++;
+            }
+            else if (gameObject.tag == "ArmoredEnemy")
+            {
+                armoredKills++;
+            }
+            else if (gameObject.tag == "Hunter")
+            {
+                hunterKills++;
+            }
 
-        GetComponent<Animator>().SetTrigger("Takedown");
+            GetComponent<Animator>().SetTrigger("Takedown");
+        }
     }
 }

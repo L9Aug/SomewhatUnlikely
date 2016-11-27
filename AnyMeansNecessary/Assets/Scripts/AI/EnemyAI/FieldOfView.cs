@@ -24,7 +24,7 @@ public class FieldOfView : MonoBehaviour
     private GameObject Player;
     private Vector3 distToPlayer;
 
-    public Gun CurrentWeapon;
+    public BaseGun CurrentWeapon;
     Animator Anim;
     void Start()
     {
