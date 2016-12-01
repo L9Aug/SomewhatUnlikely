@@ -13,6 +13,7 @@ public class ItemEnum : MonoBehaviour {
         Pistol = 0,
         SilencedPistol = 1,
         SniperRifle,
+        AssualtRifle,
         Explosive,
         TranqPistol,
         BodyArmour,

@@ -181,12 +181,11 @@ public class Inventory : MonoBehaviour {
     
     public void UseItem(int id)
     {
-        print("clicked" + id);
         if (ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Equipable)
         {
             if (lastId != id)
             {
-                print("This weapon is clicked " + (ItemEnum.Item)id);
+                ItemEffects.EquipableEffect(itemButton[id]);
                 itemButton[id].GetComponentInChildren<Text>().text = "Equipped";
                 if (lastId != -1)
                 {
@@ -196,13 +195,14 @@ public class Inventory : MonoBehaviour {
             }
         }
           
-        if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Consumable)
-        {
+       else if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Consumable)
+       {
             if(ItemDataBase.InventoryDataBase.itemList[id].currentStack > 0 )
             {
+                ItemEffects.ConsumableEffect(itemButton[id]);
                 ItemDataBase.InventoryDataBase.itemList[id].currentStack--;
                 itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
-                ConsumableEffect(id);
+               
                 
             }
             else
@@ -210,20 +210,54 @@ public class Inventory : MonoBehaviour {
               //  itemButton[id].GetComponent<Image>().sprite = null;
                 Destroy(itemButton[id].gameObject);
             }
+       }
+       else if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.EquipAndConsume)
+       {
+            if (ItemDataBase.InventoryDataBase.itemList[id].currentStack > 0)
+            {
+                if (lastId != id)
+                {
+                    ItemEffects.EquipAndConsumeEffect(itemButton[id]);
+                    itemButton[id].GetComponentInChildren<Text>().text = "Equipped " + ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    if(lastId != -1)
+                    {
+                        itemButton[lastId].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[lastId].currentStack.ToString();
+                    }
+                    lastId = id;
+                }
+            }
+            else
+            {
+                Destroy(itemButton[id].gameObject);
+            }
+       }
+       
+        else if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.misc)
+        {
+            if(ItemDataBase.InventoryDataBase.itemList[id].currentStack >0)
+            {
+
+            }
+            else
+            {
+                Destroy(itemButton[id].gameObject);
+            }
         }
+
+        else
+        {
+            if (ItemDataBase.InventoryDataBase.itemList[id].currentStack > 0)
+            {
+
+            }
+            else
+            {
+                Destroy(itemButton[id].gameObject);
+            }
+        }
+
     }
     
-    void ConsumableEffect(int id)
-    {
-        if(itemButton[id].GetComponent<ItemEnum>().thisItem == ItemEnum.Item.BodyArmour)
-        {
-            //Add armour for player
-        }
-        else if(itemButton[id].GetComponent<ItemEnum>().thisItem == ItemEnum.Item.MedKit)
-        {
-            PlayerController.PC.GetComponent<HealthComp>().Hit(-20f);
-        }
-    }
-
+    
 
 }

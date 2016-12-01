@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour {
     public GameObject InventoryScreen;
     public GameObject Map;
     public GameObject InventoryElements;
+    public GameObject OptionsScreen;
 
     public GameObject Player;
     public Camera MapCamera;
@@ -64,6 +65,7 @@ public class PauseMenu : MonoBehaviour {
     {
         PauseButtons.gameObject.SetActive(false);
         InventoryScreen.gameObject.SetActive(false);
+        OptionsScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(true);
         InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
@@ -78,6 +80,7 @@ public class PauseMenu : MonoBehaviour {
    void enableButtons()//Function brings the pause menu up
     {
         PauseButtons.gameObject.SetActive(true);
+        OptionsScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         InventoryScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
@@ -106,6 +109,7 @@ public class PauseMenu : MonoBehaviour {
     public void inventoryUp()
     {
         InventoryScreen.gameObject.SetActive(true);
+        OptionsScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
@@ -122,6 +126,7 @@ public class PauseMenu : MonoBehaviour {
     {
         //Displays Map section of the menu and deactivates other elements
         Map.gameObject.SetActive(true);
+        OptionsScreen.gameObject.SetActive(false);
         InventoryScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
@@ -138,6 +143,22 @@ public class PauseMenu : MonoBehaviour {
         Cursor.lockState = CursorLockMode.None;
         //#endif
 
+    }
+
+    public void OptionsMenu()
+    {
+        OptionsScreen.gameObject.SetActive(true);
+        PauseButtons.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
+
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
     }
 
 
