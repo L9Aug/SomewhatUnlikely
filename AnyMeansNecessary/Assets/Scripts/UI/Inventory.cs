@@ -13,6 +13,8 @@ public class Inventory : MonoBehaviour {
    public RawImage Misc;
    public RawImage Quest;
 
+   static int lastId;
+
    Vector3 WeaponImagePosition           = Vector3.zero;
    Vector3 HealthImagePosition           = Vector3.zero;
    Vector3 MiscImagePosition             = Vector3.zero;
@@ -21,18 +23,22 @@ public class Inventory : MonoBehaviour {
 
    int weight;
    int maxWeight;
-   Button itemButton;
+   bool isEquipped; 
+   Button[] itemButton;
 
 
 	// Use this for initialization
 	void Start() {
 
+       lastId = -1; 
        maxWeight = 60;
+       itemButton = new Button[maxWeight]; 
        WeaponImagePosition = new Vector3(-12, -114, 0);
        HealthImagePosition = new Vector3(-12, -114, 0);
        DistractionImagePosition = new Vector3(-12, -114, 0);
        MiscImagePosition = new Vector3(-12, -114, 0);
        QuestImagePosition = new Vector3(-12, -114, 0);
+
 
 	}
 	
@@ -51,15 +57,22 @@ public class Inventory : MonoBehaviour {
         {
             if (weight < maxWeight)
             {
-                AddItem(8);
+                AddItem(6);
             }
 
+        }
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            if(weight < maxWeight)
+            {
+                AddItem(0);
+            }
         }
 
 
     }
 
-    void AddItem(int id)
+ public void AddItem(int id)
     {  
       
 
@@ -77,13 +90,13 @@ public class Inventory : MonoBehaviour {
                 {
                     InstantiateItem(Health, HealthImagePosition, id);
                     HealthImagePosition = MoveItemImage(HealthImagePosition);
-                    itemButton.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                 }
                 else
                 {
                     ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
                     weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-                    itemButton.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                     
                     
                 }
@@ -95,13 +108,13 @@ public class Inventory : MonoBehaviour {
                 {
                     InstantiateItem(Distraction, DistractionImagePosition, id);
                     DistractionImagePosition = MoveItemImage(DistractionImagePosition);
-                    itemButton.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                 }
                 else
                 {
                     ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
                     weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-                    itemButton.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                 }
             }
 
@@ -116,7 +129,7 @@ public class Inventory : MonoBehaviour {
                 {
                     ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
                     weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-                    itemButton.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                 }
 
             }
@@ -132,7 +145,7 @@ public class Inventory : MonoBehaviour {
                 {
                     ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
                     weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
-                    itemButton.GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                    itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
                 }
 
             }
@@ -145,8 +158,10 @@ public class Inventory : MonoBehaviour {
 
     Vector3 MoveItemImage(Vector3 ItemImagePos)
     {
-        ItemImagePos = ItemImagePos + new Vector3(165, 0, 0);
-        return ItemImagePos;
+           ItemImagePos = ItemImagePos + new Vector3(165, 0, 0);
+            
+            return ItemImagePos;
+        
     }
 
   
@@ -154,21 +169,61 @@ public class Inventory : MonoBehaviour {
     void InstantiateItem(RawImage ImageType,Vector3 ImagePosition, int id)
     {
         ItemImage.GetComponent<Image>().sprite = ItemDataBase.InventoryDataBase.itemList[id].itemSprite;
-        itemButton = Instantiate(ItemImage, ImageType.transform, false) as Button;
-        itemButton.GetComponent<RectTransform>().localPosition = ImagePosition;
+        itemButton[id] = Instantiate(ItemImage, ImageType.transform, false) as Button;
+        itemButton[id].GetComponent<RectTransform>().localPosition = ImagePosition;
         ItemDataBase.InventoryDataBase.itemList[id].currentStack++;
         weight += ItemDataBase.InventoryDataBase.itemList[id].itemWeight;
 
-        itemButton.GetComponent<ItemEnum>().thisItem = (ItemEnum.Item)id;
-        itemButton.onClick.AddListener(delegate { UseItem((int)itemButton.GetComponent<ItemEnum>().thisItem); });
+        itemButton[id].GetComponent<ItemEnum>().thisItem = (ItemEnum.Item)id;
+        itemButton[id].onClick.AddListener(delegate { UseItem((int)itemButton[id].GetComponent<ItemEnum>().thisItem); });
        
     }
-
+    
     public void UseItem(int id)
     {
-         
+        print("clicked" + id);
+        if (ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Equipable)
+        {
+            if (lastId != id)
+            {
+                print("This weapon is clicked " + (ItemEnum.Item)id);
+                itemButton[id].GetComponentInChildren<Text>().text = "Equipped";
+                if (lastId != -1)
+                {
+                    itemButton[lastId].GetComponentInChildren<Text>().text = "1";
+                }
+                lastId = id;
+            }
+        }
+          
+        if(ItemDataBase.InventoryDataBase.itemList[id].itemType == Items.TypeofItem.Consumable)
+        {
+            if(ItemDataBase.InventoryDataBase.itemList[id].currentStack > 0 )
+            {
+                ItemDataBase.InventoryDataBase.itemList[id].currentStack--;
+                itemButton[id].GetComponentInChildren<Text>().text = ItemDataBase.InventoryDataBase.itemList[id].currentStack.ToString();
+                ConsumableEffect(id);
+                
+            }
+            else
+            {
+              //  itemButton[id].GetComponent<Image>().sprite = null;
+                Destroy(itemButton[id].gameObject);
+            }
+        }
     }
     
-    
+    void ConsumableEffect(int id)
+    {
+        if(itemButton[id].GetComponent<ItemEnum>().thisItem == ItemEnum.Item.BodyArmour)
+        {
+            //Add armour for player
+        }
+        else if(itemButton[id].GetComponent<ItemEnum>().thisItem == ItemEnum.Item.MedKit)
+        {
+            PlayerController.PC.GetComponent<HealthComp>().Hit(-20f);
+        }
+    }
+
 
 }
