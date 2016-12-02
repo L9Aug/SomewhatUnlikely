@@ -85,7 +85,7 @@ public class CivilianAI_Main : MonoBehaviour {
                 fleeTimer += Time.deltaTime;
             }
             Agent.speed = 1;
-            Agent.SetDestination(hidePoints[randomHidePoint].position);//picks 1 of the 4 corners from empty gameobjects and runs towards that specific point
+         //   Agent.SetDestination(hidePoints[randomHidePoint].position);//picks 1 of the 4 corners from empty gameobjects and runs towards that specific point
         }
     }
 

@@ -209,7 +209,6 @@ public class PlayerController : MonoBehaviour {
             if (AIInRange.Contains(other.gameObject))
             {
                 AIInRange.Remove(other.gameObject);
-                print(other.name + " removed " + AIInRange.Count);
             }
         }
     }

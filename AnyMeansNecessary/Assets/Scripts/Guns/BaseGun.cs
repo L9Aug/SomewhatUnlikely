@@ -147,6 +147,11 @@ public class BaseGun : MonoBehaviour {
         return false;
     }
 
+    public override bool Equals(object o)
+    {
+        return base.Equals(o);
+    }
+
     void FiredGun()
     {
         OnCooldown = true;

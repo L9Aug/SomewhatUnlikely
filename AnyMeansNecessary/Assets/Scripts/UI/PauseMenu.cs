@@ -6,19 +6,27 @@ public class PauseMenu : MonoBehaviour {
 
     public GameObject PauseButtons;
     public GameObject GamePlayHUD;
-    public GameObject Inventory;
+    public GameObject InventoryScreen;
     public GameObject Map;
+    public GameObject InventoryElements;
+    public GameObject OptionsScreen;
 
     public GameObject Player;
     public Camera MapCamera;
 
-    
+    public Button someButton;
+
+    int somechangingNumber;
+
+    Vector3 StartPos;
    
     
     // Use this for initialization
     void Start () {
-        disableButtons();    
+        disableButtons();
+        somechangingNumber = 0;
            
+        someButton.onClick.AddListener(delegate { SomeNumber(somechangingNumber); });
 	}
 	
 	// Update is called once per frame
@@ -48,14 +56,20 @@ public class PauseMenu : MonoBehaviour {
             mapUp();
             Time.timeScale = 0.0f;
         }
+
+        somechangingNumber++;
+
     }
 
     void disableButtons()// disables pause menu
     {
         PauseButtons.gameObject.SetActive(false);
-        Inventory.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
+        OptionsScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(true);
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+        
         
 //#if !UNITY_EDITOR
         Cursor.visible = false;
@@ -66,9 +80,13 @@ public class PauseMenu : MonoBehaviour {
    void enableButtons()//Function brings the pause menu up
     {
         PauseButtons.gameObject.SetActive(true);
+        OptionsScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
-        Inventory.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100,2000,0);
+       
         //#if !UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -90,10 +108,12 @@ public class PauseMenu : MonoBehaviour {
 
     public void inventoryUp()
     {
-        Inventory.gameObject.SetActive(true);
+        InventoryScreen.gameObject.SetActive(true);
+        OptionsScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+        InventoryElements.GetComponent<RectTransform>().localPosition = Vector3.zero;
 
         //#if !UNITY_EDITOR
         Cursor.visible = true;
@@ -106,9 +126,12 @@ public class PauseMenu : MonoBehaviour {
     {
         //Displays Map section of the menu and deactivates other elements
         Map.gameObject.SetActive(true);
-        Inventory.gameObject.SetActive(false);
+        OptionsScreen.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+        
 
 
 
@@ -120,6 +143,22 @@ public class PauseMenu : MonoBehaviour {
         Cursor.lockState = CursorLockMode.None;
         //#endif
 
+    }
+
+    public void OptionsMenu()
+    {
+        OptionsScreen.gameObject.SetActive(true);
+        PauseButtons.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
+
+        InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
     }
 
 
@@ -169,6 +208,11 @@ public class PauseMenu : MonoBehaviour {
         //UIElements.health = CheckpointScript.storedHealth;// sets health to stored value
         UIElements.xp = CheckpointScript.storedXp;//sets xp to stored value 
         PlayerController.PC.transform.position = XMLManager.instance.enemyDB.PlayerPos;//moves player to checkpoint position
+    }
+
+    void SomeNumber(int value)
+    {
+        print(value);
     }
 
 }

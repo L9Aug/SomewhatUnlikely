@@ -4,20 +4,19 @@ using System.Collections;
 public class KillTarget : Base_Mission
 {
 
-    private GameObject _Spawntarget;
+    public GameObject enemyTarget;
     private GameObject _Target;
-    public int quest;
 
     void Start()
     {
-        MissonDetails("Kill: "+ gameObject.name, quest);
+        MissonDetails("Kill: "+ enemyTarget.gameObject.name, questNumber);
         _Target = (GameObject)Resources.Load("Target");
         spawnTarget();
     }
     void spawnTarget()
     {
         _Target = (GameObject)Instantiate(_Target, Vector3.zero, Quaternion.identity);
-        _Target.transform.parent = gameObject.transform;
+        _Target.transform.parent = enemyTarget.gameObject.transform;
         _Target.transform.localPosition = new Vector3(0, 1.8f, 0);
     }
     void Update()
@@ -27,7 +26,7 @@ public class KillTarget : Base_Mission
 
     private bool CheckComplete()
     {
-        if (GetComponent<Base_Enemy>()._state == Base_Enemy.State.Dead)
+        if (enemyTarget.GetComponent<Base_Enemy>()._state == Base_Enemy.State.Dead)
         {
             return true;
         }
@@ -38,7 +37,9 @@ public class KillTarget : Base_Mission
     {
         if (_hasCompleted)
         {
+            questCompletedAmount++;
             MissionComplete();
+            giveXP(xpReward);
             Destroy(_Target);
             Destroy(GetComponent<KillTarget>());
         }

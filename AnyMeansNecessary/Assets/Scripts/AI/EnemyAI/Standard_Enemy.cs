@@ -39,7 +39,7 @@ public class Standard_Enemy : Base_Enemy {
                 break;
 
             case State.Dead:
-                Agent.Stop();
+                Agent.velocity = Vector3.zero;
                 break;
 
             case State.Alerted:
