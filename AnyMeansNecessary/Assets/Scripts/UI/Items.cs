@@ -3,16 +3,18 @@ using System.Collections;
 
 public class Items {
 
-    string itemName;
-    int idValue;
-    Sprite itemSprite;
-    float itemDamage;
-    float itemNoise;
-    int itemValue;
-    int itemWeight;
-    string description;
-    GameObject model;
-    TypeofItem itemType;
+   public string itemName;
+   public int idValue;
+   public Sprite itemSprite;
+   public float itemDamage;
+   public float itemNoise;
+   public int itemValue;
+   public int itemWeight;
+   public int currentStack;
+   public int maxItemStack;
+   public string description;
+   public GameObject model;
+   public TypeofItem itemType;
 
     public enum TypeofItem
     {
@@ -23,7 +25,7 @@ public class Items {
         misc
     }
 
-    public Items(string name, int id, float damage, float noise, int value, int weight, string desc,TypeofItem TypeItem )
+    public Items(string name, int id, float damage, float noise, int value, int weight,int stack,int maxStack, string desc,TypeofItem TypeItem )
     {
         itemName = name;
         idValue = id;
@@ -31,6 +33,8 @@ public class Items {
         itemNoise = noise;
         itemValue = value;
         itemWeight = weight;
+        currentStack = stack;
+        maxItemStack = maxStack;
         description = desc;
         itemType = TypeItem;
         itemSprite = Resources.Load<Sprite>("" + name); //name passed in must be sprite fileName; 

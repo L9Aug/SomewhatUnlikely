@@ -44,7 +44,8 @@ public class HealthComp : MonoBehaviour {
                 h(health, Amount);
             }
         }
-        if(this.gameObject.tag != "Player" && health > 0 && gameObject.tag != "Civilian")
+
+        if(this.gameObject.tag != "Player" && health > 0 && gameObject.tag != "Civilian" && gameObject.GetComponent<Base_Enemy>()._state != Base_Enemy.State.Dead)
         {
             GetComponent<Enemy_Was_Shot>().Shot();
         }

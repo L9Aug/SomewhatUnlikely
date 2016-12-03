@@ -50,7 +50,7 @@ public class KillxEnemies : Base_Mission
 	}
 	
 	void FixedUpdate () {
-        Debug.Log(_remainingTargets + " _remaining - " + remainingTargets);
+        //Debug.Log(_remainingTargets + " _remaining - " + remainingTargets);
         CheckKills();
         Completed(CheckComplete());
     }

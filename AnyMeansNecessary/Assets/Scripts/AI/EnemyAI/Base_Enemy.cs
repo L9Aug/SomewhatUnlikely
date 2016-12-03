@@ -9,16 +9,17 @@ public class Base_Enemy : MonoBehaviour
     public static int sniperKills;
     public static int hunterKills;
 
-
 	public State _state;
     public NavMeshAgent Agent;
     public static int killCount;
+
     void Start()
     {
         canvas = GameObject.Find("mainCanvas");
         _state = State.Patrol;
         Agent = GetComponent<NavMeshAgent>();
     }
+
 	public void setState(State newState)
 	{
 		_state = newState; // assigns new state based on value inputted.
@@ -64,4 +65,5 @@ public class Base_Enemy : MonoBehaviour
             GetComponent<Animator>().SetTrigger("Takedown");
         }
     }
+
 }

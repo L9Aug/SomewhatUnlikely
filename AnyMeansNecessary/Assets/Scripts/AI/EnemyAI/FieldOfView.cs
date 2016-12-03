@@ -69,14 +69,14 @@ public class FieldOfView : MonoBehaviour
                             {
                                 distToPlayer = transform.position - Player.transform.position;
                                 if (distToPlayer.magnitude < shootRange)
+                            {
+                                if (CurrentWeapon.Fire(targetsInViewRadius[i].transform.position + new Vector3(0, 1.4f, 0), 1 << 8, 1, true, true))
                                 {
-                                    //if (CurrentWeapon.Fire(targetsInViewRadius[i].transform.position + new Vector3(0, 1.4f, 0), 1 << 8, 1, true, true))
-                                    //{
-                                    //    Anim.SetTrigger("Fire");
-                                    //}
+                                    Anim.SetTrigger("Fire");
                                 }
+                            }
 
-                                if (gameObject.tag == "StandardEnemy")
+                            if (gameObject.tag == "StandardEnemy")
                                 {
                                     GetComponent<Standard_Enemy>().setState(Standard_Enemy.State.Chase);
                                 }

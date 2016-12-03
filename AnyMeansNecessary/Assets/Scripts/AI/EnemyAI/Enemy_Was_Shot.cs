@@ -46,7 +46,9 @@ public class Enemy_Was_Shot : MonoBehaviour {
         }
         return;
     }
-   private Vector3 distToLastPos;
+
+    private Vector3 distToLastPos;
+
     public void WasShot()
     {
 

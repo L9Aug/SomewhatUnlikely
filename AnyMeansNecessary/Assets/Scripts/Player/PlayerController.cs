@@ -120,6 +120,7 @@ public class PlayerController : MonoBehaviour {
 			CanTakedown = true;
 		}
 
+
         if(Input.GetButtonDown("Interact") && CanTakedown)
         {
             PerformTakedown(TakedownTarget);
@@ -133,11 +134,7 @@ public class PlayerController : MonoBehaviour {
             float Takedown = Random.Range(0, 2); // select at random the takedown to use
             Animator TargetAnim = Target.GetComponent<Animator>(); // get the animator of the AI
 
-            Target.GetComponent<Base_Enemy>().Killai();
-            pauseMenu.GetComponent<UIElements>().xpGain(10);
-            //Target.GetComponent<HealthComp>().SetHealth(0);
-
-            //Target.GetComponent<Base_Enemy>().setState(Base_Enemy.State.Dead); // turn off the AI
+            Target.GetComponent<Base_Enemy>().setState(Base_Enemy.State.Dead); // turn off the AI
 
             Target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             Target.GetComponent<NavMeshAgent>().speed = 0;            
@@ -212,7 +209,6 @@ public class PlayerController : MonoBehaviour {
             if (AIInRange.Contains(other.gameObject))
             {
                 AIInRange.Remove(other.gameObject);
-                print(other.name + " removed " + AIInRange.Count);
             }
         }
     }
