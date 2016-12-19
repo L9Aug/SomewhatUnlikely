@@ -38,12 +38,6 @@ namespace UMA
 			capsule.height = umaData.characterHeight;
 			capsule.center = new Vector3(0, capsule.height * 0.5f - 0.04f, 0);
             capsule.material = PM;
-
-            CapsuleCollider TriggerVolume = umaData.gameObject.AddComponent<CapsuleCollider>();
-            TriggerVolume.isTrigger = true;
-            TriggerVolume.radius = 2;
-            TriggerVolume.height = umaData.characterHeight;
-            TriggerVolume.center = new Vector3(0, capsule.height * 0.5f - 0.04f, 0);
         }
 	}
 }

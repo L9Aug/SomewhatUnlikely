@@ -15,6 +15,11 @@ namespace UMA
             if (playerController == null)
             {
                 playerController = umaData.gameObject.AddComponent<PlayerController>();
+                CapsuleCollider TriggerVolume = umaData.gameObject.AddComponent<CapsuleCollider>();
+                TriggerVolume.isTrigger = true;
+                TriggerVolume.radius = 2;
+                TriggerVolume.height = umaData.characterHeight;
+                TriggerVolume.center = new Vector3(0, umaData.characterHeight * 0.5f - 0.04f, 0);
             }
             playerController.TakedownFOV = TakedownFOV;
 
