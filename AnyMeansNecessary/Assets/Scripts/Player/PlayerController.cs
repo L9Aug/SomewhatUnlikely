@@ -10,19 +10,21 @@ public class PlayerController : MonoBehaviour {
     public static PlayerController PC;
 
     public float TakedownFOV;
-    public Gun CurrentWeapon;
+    public BaseGun CurrentWeapon;
 
     private List<GameObject> AIInRange = new List<GameObject>(); //list of AI that are in takedown range
     private bool CanTakedown = false;
-    private Animator Anim;
+    private Animator anim;
     private Camera PlayerCam;
     private PauseMenu pauseMenu;
     private PlayerMovementController PMC;
+    private EquipmentController equipmentController;
+    private CameraController cameraController;
 
     /// <summary>
     /// Player State Machine
     /// </summary>
-    private StateMachine PSM;
+    public SM.StateMachine PSM;
 
     private bool Dying = false;
 
@@ -34,12 +36,14 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        SetupStateMachine();
-        Anim = GetComponent<Animator>();
+        AnimTest();
         PlayerCam = Camera.main;
         pauseMenu = FindObjectOfType<PauseMenu>();
         PMC = GetComponent<PlayerMovementController>();
+        equipmentController = GetComponent<EquipmentController>();
+        cameraController = GetComponent<CameraController>();
         PC = this;
+        SetupStateMachine();
 	}
 	
 	// Update is called once per frame
@@ -47,6 +51,15 @@ public class PlayerController : MonoBehaviour {
     {
         PSM.SMUpdate();
 	}
+
+    bool AnimTest()
+    {
+        if(anim == null)
+        {
+            anim = GetComponent<Animator>();
+        }
+        return (anim != null) ? true : false;
+    }
 
     public void HealthCheck(float Health, float HealthChanged)
     {
@@ -58,20 +71,28 @@ public class PlayerController : MonoBehaviour {
 
     void WeaponChecks()
     {
-        if (Time.timeScale > 0.01)
+        if (Time.timeScale > 0.01 && PMC.PMSM.GetCurrentState() == "Movement")
         {
             if (Input.GetButton("Fire"))
             {
                 // 1 << 10 is the AI layer.
                 if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, false, true))
                 {
-                    Anim.SetTrigger("Fire");
+                    if (AnimTest())
+                    {
+                        anim.SetTrigger("Fire");
+                    }
                 }
             }
 
             if (Input.GetButton("Reload"))
             {
                 CurrentWeapon.Reload();
+            }
+
+            if (Input.GetButtonDown("CycleEquipment"))
+            {
+                equipmentController.CycleEquipment();
             }
         }
     }
@@ -114,29 +135,22 @@ public class PlayerController : MonoBehaviour {
             Animator TargetAnim = Target.GetComponent<Animator>(); // get the animator of the AI
 
             Target.GetComponent<Base_Enemy>().setState(Base_Enemy.State.Dead); // turn off the AI
+
             Target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             Target.GetComponent<NavMeshAgent>().speed = 0;            
 
             TargetAnim.applyRootMotion = false;
             //Anim.applyRootMotion = true;
 
-            TargetAnim.SetFloat("Takedowns", Takedown); // tell the animator which takedown to use.
-            Anim.SetFloat("Takedowns", Takedown);
-
             TargetAnim.SetTrigger("Takedown"); // trigger teh animations for both the AI and the Player.
-            Anim.SetTrigger("Takedown");
+            if (AnimTest())
+            {
+                anim.SetTrigger("Takedown");
+            }
 
             //Put the player into the takedown state
             PMC.TakedownTarget = Target.transform;
             PMC.BeginTakedown = true;
-        }
-    }
-
-    void AnimTest()
-    {
-        if(Anim == null)
-        {
-            Anim = GetComponent<Animator>();
         }
     }
 
@@ -195,14 +209,8 @@ public class PlayerController : MonoBehaviour {
             if (AIInRange.Contains(other.gameObject))
             {
                 AIInRange.Remove(other.gameObject);
-                print(other.name + " removed " + AIInRange.Count);
             }
         }
-    }
-
-    private void BeginActive()
-    {
-
     }
 
     private void ActiveUpdate()
@@ -211,9 +219,32 @@ public class PlayerController : MonoBehaviour {
         TakedownCheck();
     }
 
-    private void EndActive()
+    void OnAnimatorIK(int layerIndex)
     {
+        if (CurrentWeapon != null)
+        {
+            if (layerIndex == 1 && AnimTest() && PMC.PMSM.GetCurrentState() == "Movement")
+            {
+                anim.speed = CurrentWeapon.animSpeed;
 
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, CurrentWeapon.RightHandPositionWeight);
+                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, CurrentWeapon.LeftHandPositionWeight);
+                anim.SetIKPosition(AvatarIKGoal.RightHand, CurrentWeapon.RightHand.position);
+                anim.SetIKPosition(AvatarIKGoal.LeftHand, CurrentWeapon.LeftHand.position);
+
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, CurrentWeapon.RightHandRotationWeight);
+                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, CurrentWeapon.LeftHandRotationWeight);
+                anim.SetIKRotation(AvatarIKGoal.RightHand, CurrentWeapon.RightHand.rotation);
+                anim.SetIKRotation(AvatarIKGoal.LeftHand, CurrentWeapon.LeftHand.rotation);
+            }
+            else if (PMC.PMSM.GetCurrentState() == "Takedown" && AnimTest())
+            {
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
+            }
+        }
     }
 
     private void BeginDead()
@@ -237,13 +268,19 @@ public class PlayerController : MonoBehaviour {
 
     private void DyingTransFunc()
     {
-        Anim.SetBool("Dying", true);
-        //Dying = false;
+        if (AnimTest())
+        {
+            anim.SetBool("Dying", true);
+            //Dying = false;
+        }
     }
 
     private void RevivedTransFunc()
     {
-        Anim.SetBool("Dying", false);
+        if (AnimTest())
+        {
+            anim.SetBool("Dying", false);
+        }
         Revived = false;
     }
 
@@ -259,64 +296,36 @@ public class PlayerController : MonoBehaviour {
 
     void SetupStateMachine()
     {
-        // Create Machine.
-        PSM = new StateMachine();
+        // Configure conditions for transitions.
+        Condition.BoolCondition IsDying = new Condition.BoolCondition();
+        IsDying.Condition = DyingCheck;
 
-        // Create States.
-        State Active = new State();
-        State Dead = new State();
-
+        Condition.BoolCondition IsRevived = new Condition.BoolCondition();
+        IsRevived.Condition = RevivedCheck;
 
         // Create Transitions.
-        Transition dying = new Transition();
-        Transition revived = new Transition();
+        SM.Transition dying = new SM.Transition("Dying", IsDying, DyingTransFunc);
+        SM.Transition revived = new SM.Transition("Revived", IsRevived, RevivedTransFunc);
 
-        // Add states to state machine.
-        PSM.States.Add(Active);
-        PSM.States.Add(Dead);
+        // Create States.
+        SM.State Active = new SM.State("Active",
+            new List<SM.Transition>() { dying },
+            new List<SM.Action>() { PMC.BeginFirstPersonState },
+            new List<SM.Action>() { PMC.PMSM.SMUpdate, ActiveUpdate },
+            new List<SM.Action>() { PMC.EndFirstPersonState });
 
-        // Set up initial State.
-        PSM.InitialState = PSM.States[0];
-
-        // Assign actions to states.
-        Active.EntryActions.Add(BeginActive);
-        Active.Actions.Add(ActiveUpdate);
-        Active.ExitActions.Add(EndActive);
-        Dead.EntryActions.Add(BeginDead);
-        Dead.Actions.Add(DeadUpdate);
-        Dead.ExitActions.Add(EndDead);
-
-        // Assign transitions to states.
-        Active.Transitions.Add(dying);
-        Dead.Transitions.Add(revived);
-
-        // Assign actions to transitions.
-        dying.Actions.Add(DyingTransFunc);
-        revived.Actions.Add(RevivedTransFunc);
+        SM.State Dead = new SM.State("Dead",
+            new List<SM.Transition>() { revived },
+            new List<SM.Action>() { BeginDead },
+            new List<SM.Action>() { DeadUpdate },
+            new List<SM.Action>() { EndDead });
 
         // Assign target states to transitions.
-        dying.TargetState = Dead;
-        revived.TargetState = Active;
+        dying.SetTargetState(Dead);
+        revived.SetTargetState(Active);
 
-        // Configure conditions for transitions.
-        BoolCondition IsDying = new BoolCondition();
-        IsDying.Condition = DyingCheck;
-        dying.condition = IsDying;
-
-        BoolCondition IsRevived = new BoolCondition();
-        IsRevived.Condition = RevivedCheck;
-        revived.condition = IsRevived;
-
-        // Assign state names.
-        Active.StateName = "Active";
-        Dead.StateName = "Dead";
-
-        // Assign Transition names.
-        dying.TransistionName = "Dying";
-        revived.TransistionName = "Revived";
-
-        // Set if you want the machine to print messages.
-        PSM.PrintMessages = false;
+        // Create Machine.
+        PSM = new SM.StateMachine(null, Active, Dead);
 
         // Initialize the machine.
         PSM.InitMachine();

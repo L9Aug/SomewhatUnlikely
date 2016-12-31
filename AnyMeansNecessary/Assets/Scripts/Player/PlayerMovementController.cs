@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections; 
+using System.Collections.Generic;
 
 public class PlayerMovementController : MonoBehaviour {
 
     /// <summary>
     /// Player Movement State Machine
     /// </summary>
-    StateMachine PMSM;
+    public SM.StateMachine PMSM;
     public bool BeginTakedown = false;
     public FirstPersonMovement m_FPM;
     private Animator anim;
@@ -22,22 +23,26 @@ public class PlayerMovementController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        SetupStateMachine();
         anim = GetComponent<Animator>();
         uiElements = FindObjectOfType<UIElements>();
+        SetupStateMachine();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        PMSM.SMUpdate();
+        //PMSM.SMUpdate();
 	}
 
-    #region PMSM Functions
-
-    void BeginTakedownState()
+    bool AnimTest()
     {
-
+        if (anim == null)
+        {
+            anim = GetComponent<Animator>();
+        }
+        return (anim != null) ? true : false;
     }
+
+    #region PMSM Functions
 
     void TakedownStateUpdate()
     {
@@ -61,24 +66,19 @@ public class PlayerMovementController : MonoBehaviour {
         uiElements.xpGain(25);
     }
 
-    void BeginFirstPersonState()
+    public void BeginFirstPersonState()
     {
         m_FPM.enabled = true;
     }
 
-    void FirstPersonStateUpdate()
-    {
-
-    }
-
-    void EndFirstPersonState()
+    public void EndFirstPersonState()
     {
         m_FPM.enabled = false;
     }
 
     void BeginTakedownTransitionFunc()
     {
-        BeginTakedown = false;
+        BeginTakedown = false;        
     }
 
     void EndTakedownTransitionFunc()
@@ -91,7 +91,14 @@ public class PlayerMovementController : MonoBehaviour {
 
     bool TestAnimTag()
     {
-        return (!anim.GetCurrentAnimatorStateInfo(2).IsTag("InTakedown") && anim.GetCurrentAnimatorStateInfo(2).normalizedTime < 0.5f) || (TakedownTarget == null);
+        if (AnimTest())
+        {
+            return (!anim.GetCurrentAnimatorStateInfo(2).IsTag("InTakedown") && anim.GetCurrentAnimatorStateInfo(2).normalizedTime < 0.5f) || (TakedownTarget == null);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     bool TakedownTest()
@@ -103,63 +110,36 @@ public class PlayerMovementController : MonoBehaviour {
 
     void SetupStateMachine()
     {
-        // Create Machine
-        PMSM = new StateMachine();
+        // Configure Conditions For Transitions
+        Condition.BoolCondition BeginTakedownCond = new Condition.BoolCondition();
+        BeginTakedownCond.Condition = TakedownTest;
 
-        // Create States
-        State TakedownState = new State();
-        State FirstPersonState = new State();
+        Condition.BoolCondition EndTakedownCond = new Condition.BoolCondition();
+        EndTakedownCond.Condition = TestAnimTag;
 
         // Create Transistions
-        Transition BeginTakedown = new Transition();
-        Transition EndTakedown = new Transition();
+        SM.Transition BeginTakedown = new SM.Transition("Begin Takedown", BeginTakedownCond, BeginTakedownTransitionFunc);
+        SM.Transition EndTakedown = new SM.Transition("End Takedown", EndTakedownCond, EndTakedownTransitionFunc);
 
-        // Add States to Machine
-        PMSM.States.Add(FirstPersonState);
-        PMSM.States.Add(TakedownState);
+        // Create States
+        SM.State TakedownState = new SM.State("Takedown",
+            new List<SM.Transition>() { EndTakedown },
+            null,
+            new List<SM.Action>() { TakedownStateUpdate },
+            new List<SM.Action>() { EndTakedownState });
 
-        // Assign Initial State
-        PMSM.InitialState = PMSM.States[0];
-
-        // Assign Actions to States
-        TakedownState.EntryActions.Add(BeginTakedownState);
-        TakedownState.Actions.Add(TakedownStateUpdate);
-        TakedownState.ExitActions.Add(EndTakedownState);
-        FirstPersonState.EntryActions.Add(BeginFirstPersonState);
-        FirstPersonState.Actions.Add(FirstPersonStateUpdate);
-        FirstPersonState.ExitActions.Add(EndFirstPersonState);
-
-        // Assign Transitions to States
-        TakedownState.Transitions.Add(EndTakedown);
-        FirstPersonState.Transitions.Add(BeginTakedown);
-
-        // Assign Actions to Transitions
-        BeginTakedown.Actions.Add(BeginTakedownTransitionFunc);
-        EndTakedown.Actions.Add(EndTakedownTransitionFunc);
+        SM.State FirstPersonState = new SM.State("Movement",
+            new List<SM.Transition>() { BeginTakedown },
+            new List<SM.Action>() { BeginFirstPersonState },
+            null,
+            new List<SM.Action>() { EndFirstPersonState });
 
         // Assign Target States to Transitions
-        BeginTakedown.TargetState = TakedownState;
-        EndTakedown.TargetState = FirstPersonState;
+        BeginTakedown.SetTargetState(TakedownState);
+        EndTakedown.SetTargetState(FirstPersonState);
 
-        // Configure Conditions For Transitions
-        BoolCondition BeginTakedownCond = new BoolCondition();
-        BeginTakedownCond.Condition = TakedownTest;
-        BeginTakedown.condition = BeginTakedownCond;
-
-        BoolCondition EndTakedownCond = new BoolCondition();
-        EndTakedownCond.Condition = TestAnimTag;
-        EndTakedown.condition = EndTakedownCond;
-
-        // Assign Each State a Name
-        TakedownState.StateName = "Takedown Mode";
-        FirstPersonState.StateName = "User Control";
-
-        // Assign each Trnsition a Name
-        BeginTakedown.TransistionName = "Begin Takedown";
-        EndTakedown.TransistionName = "End Takedown";
-
-        // Set if the Machine should print Messages
-        PMSM.PrintMessages = false;
+        // Create Machine
+        PMSM = new SM.StateMachine(null, FirstPersonState, TakedownState);
 
         // Start the State Machine
         PMSM.InitMachine();

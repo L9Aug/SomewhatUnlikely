@@ -34,8 +34,13 @@ namespace UMA {
             pistol.transform.rotation = Quaternion.Euler(184.443f, 91.212f, -15.281f);
             pistol.transform.SetParent(GunHolder.transform, false);
 
-            umaData.gameObject.GetComponent<PlayerController>().CurrentWeapon = pistol.GetComponent<Gun>();
-            pistol.GetComponent<Gun>().updateWeapon = FindObjectOfType<UIElements>().UpdateWeaponStats;
+            umaData.gameObject.GetComponent<PlayerController>().CurrentWeapon = pistol.GetComponent<BaseGun>();
+
+            UIElements UIE = FindObjectOfType<UIElements>();
+            if (UIE != null)
+            {
+                pistol.GetComponent<BaseGun>().updateWeapon = UIE.UpdateWeaponStats;
+            }
             //print(umaData.gameObject.GetComponent<PlayerController>());
 
         }

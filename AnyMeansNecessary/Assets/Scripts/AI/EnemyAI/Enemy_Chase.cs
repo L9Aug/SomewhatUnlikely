@@ -27,6 +27,7 @@ public class Enemy_Chase : MonoBehaviour {
             Agent.SetDestination(Player.transform.position); // pathfind to player with slight offset otherwise constantly pushes player
         }
     }
+
     public void Sniperchase()
     {
         Vector3 distToWaypoint = transform.position - GetComponent<Enemy_Patrol>().SniperClosestWayPoint();

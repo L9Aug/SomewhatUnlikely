@@ -6,26 +6,24 @@ using System.Collections;
 public class Inventory : MonoBehaviour {
 
 
-   public Button ItemImage;
-   public RawImage Weapon;
-   public RawImage Health;
-   public RawImage Distraction;
-   public RawImage Misc;
-   public RawImage Quest;
+    public Button ItemImage;
+    public RawImage Weapon;
+    public RawImage Health;
+    public RawImage Distraction;
+    public RawImage Misc;
+    public RawImage Quest;
 
-   static int lastId;
+    static int lastId;
 
-   Vector3 WeaponImagePosition           = Vector3.zero;
-   Vector3 HealthImagePosition           = Vector3.zero;
-   Vector3 MiscImagePosition             = Vector3.zero;
-   Vector3 QuestImagePosition            = Vector3.zero;
-   Vector3 DistractionImagePosition      = Vector3.zero;
+    Vector3 WeaponImagePosition           = Vector3.zero;
+    Vector3 HealthImagePosition           = Vector3.zero;
+    Vector3 MiscImagePosition             = Vector3.zero;
+    Vector3 QuestImagePosition            = Vector3.zero;
+    Vector3 DistractionImagePosition      = Vector3.zero;
 
-   int weight;
-   int maxWeight;
-   bool isEquipped; 
-   Button[] itemButton;
-
+    int weight;
+    int maxWeight;
+    Button[] itemButton;
 
 	// Use this for initialization
 	void Start() {

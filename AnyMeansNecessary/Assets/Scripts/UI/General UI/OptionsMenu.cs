@@ -2,44 +2,75 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class OptionsMenu : MonoBehaviour {
+public class OptionsMenu : MonoBehaviour
+{
 
     public Slider VolumeSlider;
+    public Dropdown fullscreen;
+    public Dropdown resolutionDropDown;
+    public Dropdown Quality;
+    bool isWindowed;
+    Resolution[] resolutions;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Use this for initialization
+    void Start()
+    {
+        resolutions = Screen.resolutions;
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            resolutionDropDown.options.Add(new Dropdown.OptionData(ResolutionToString(resolutions[i])));
+            resolutionDropDown.value = i;
+
+
+        }
+        Quality.value = QualitySettings.GetQualityLevel();
+       
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         AudioListener.volume = VolumeSlider.value;
-        
-	}
 
-    public void FastestQuality()
-    {
-        QualitySettings.SetQualityLevel(0);
     }
-    public void FastQuality()
+
+    public void QualitySetting()
     {
-        QualitySettings.SetQualityLevel(1);
+        QualitySettings.SetQualityLevel(Quality.value);
     }
-    public void SimpleQuality()
+    
+
+    public void isFullScreen()
     {
-        QualitySettings.SetQualityLevel(2);
+        if (fullscreen.value == 0)
+        {
+            Screen.fullScreen = true;
+            isWindowed = false;
+        }
+
+        else
+        {
+            Screen.fullScreen = false;
+            isWindowed = true;
+        }
     }
-    public void GoodQuality()
+
+    public string ResolutionToString(Resolution res)
     {
-        QualitySettings.SetQualityLevel(3);
+        return res.width + "x" + res.height;
     }
-    public void BeautifulQuality()
+
+    public void ScreenRes()
     {
-        QualitySettings.SetQualityLevel(4);
-    }
-    public void FantasticQuality()
-    {
-        QualitySettings.SetQualityLevel(5);
+        if(isWindowed == false)
+        {
+            Screen.SetResolution(resolutions[resolutionDropDown.value].width, resolutions[resolutionDropDown.value].height, true);
+        }
+        else
+        {
+            Screen.SetResolution(resolutions[resolutionDropDown.value].width, resolutions[resolutionDropDown.value].height, false);
+        }
     }
 
 }

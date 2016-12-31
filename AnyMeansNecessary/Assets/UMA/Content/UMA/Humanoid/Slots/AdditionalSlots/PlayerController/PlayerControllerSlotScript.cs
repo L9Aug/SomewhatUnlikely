@@ -25,8 +25,11 @@ namespace UMA
             }
             healthComp.MaxHealth = 100;
             healthComp.healthChanged.Add(playerController.HealthCheck);
-            healthComp.healthChanged.Add(FindObjectOfType<UIElements>().UpdateHealth);
-
+            UIElements UIE = FindObjectOfType<UIElements>();
+            if (UIE != null)
+            {
+                healthComp.healthChanged.Add(UIE.UpdateHealth);
+            }
         }
     }
 }

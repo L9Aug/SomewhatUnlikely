@@ -22,7 +22,7 @@ public class ItemDataBase : MonoBehaviour {
             
         }
 
-        print(itemList.Count);
+        //print(itemList.Count);
 
 	}
 
