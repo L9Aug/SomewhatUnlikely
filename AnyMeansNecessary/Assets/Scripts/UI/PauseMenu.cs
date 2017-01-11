@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour {
     public GameObject Map;
     public GameObject InventoryElements;
     public GameObject OptionsScreen;
+    public GameObject SkillTreeScreen;
 
     public GameObject Player;
     public Camera MapCamera;
@@ -57,6 +58,12 @@ public class PauseMenu : MonoBehaviour {
             Time.timeScale = 0.0f;
         }
 
+        if(Input.GetButtonDown("Skills"))
+        {
+            SkillsUp();
+            Time.timeScale = 0.0f;
+        }
+
         somechangingNumber++;
 
     }
@@ -67,6 +74,7 @@ public class PauseMenu : MonoBehaviour {
         InventoryScreen.gameObject.SetActive(false);
         OptionsScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+        SkillTreeScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(true);
         InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
         
@@ -84,6 +92,7 @@ public class PauseMenu : MonoBehaviour {
         GamePlayHUD.gameObject.SetActive(false);
         InventoryScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+        SkillTreeScreen.gameObject.SetActive(false);
 
         InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100,2000,0);
        
@@ -113,6 +122,7 @@ public class PauseMenu : MonoBehaviour {
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
+        SkillTreeScreen.gameObject.SetActive(false);
         InventoryElements.GetComponent<RectTransform>().localPosition = Vector3.zero;
 
         //#if !UNITY_EDITOR
@@ -130,6 +140,7 @@ public class PauseMenu : MonoBehaviour {
         InventoryScreen.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         PauseButtons.gameObject.SetActive(false);
+        SkillTreeScreen.gameObject.SetActive(false);
         InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
         
 
@@ -151,9 +162,25 @@ public class PauseMenu : MonoBehaviour {
         PauseButtons.gameObject.SetActive(false);
         GamePlayHUD.gameObject.SetActive(false);
         InventoryScreen.gameObject.SetActive(false);
+        SkillTreeScreen.gameObject.SetActive(false);
         Map.gameObject.SetActive(false);
 
         InventoryElements.GetComponent<RectTransform>().localPosition = new Vector3(-100, 2000, 0);
+
+        //#if !UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //#endif
+    }
+
+    public void SkillsUp()
+    {
+        SkillTreeScreen.gameObject.SetActive(true);
+        OptionsScreen.gameObject.SetActive(false);
+        PauseButtons.gameObject.SetActive(false);
+        GamePlayHUD.gameObject.SetActive(false);
+        InventoryScreen.gameObject.SetActive(false);
+        Map.gameObject.SetActive(false);
 
         //#if !UNITY_EDITOR
         Cursor.visible = true;
