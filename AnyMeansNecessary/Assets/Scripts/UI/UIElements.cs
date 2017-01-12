@@ -166,6 +166,7 @@ public class UIElements : MonoBehaviour {
         if (xp >= requiredXpForLevel)
         {
             level++;
+            SkillTree.skillPoints++;
             xp = (int)(xp % requiredXpForLevel);  //if we want pool to reset for each level
         }
     }
