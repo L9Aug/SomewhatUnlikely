@@ -29,11 +29,37 @@ namespace UMA
             rigid.interpolation = RigidbodyInterpolation.Interpolate;
             rigid.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-			var capsule = umaData.gameObject.GetComponent<CapsuleCollider>();
-			if (capsule == null)
-			{
-				capsule = umaData.gameObject.AddComponent<CapsuleCollider>();
-			}
+            CapsuleCollider[] capsules = umaData.GetComponents<CapsuleCollider>();
+            CapsuleCollider capsule = umaData.gameObject.GetComponent<CapsuleCollider>();
+            switch (capsules.Length)
+            {
+                case 0:
+                    capsule = umaData.gameObject.AddComponent<CapsuleCollider>();
+                    break;
+
+                case 1:
+                    if (!capsules[0].isTrigger)
+                    {
+                        capsule = capsules[0];
+                    }
+                    else
+                    {
+                        capsule = umaData.gameObject.AddComponent<CapsuleCollider>();
+                    }
+                    break;
+
+                default:
+                    foreach(CapsuleCollider col in capsules)
+                    {
+                        if (!col.isTrigger)
+                        {
+                            capsule = col;
+                            break;
+                        }
+                    }                    
+                    break;
+            }
+
 			capsule.radius = umaData.characterRadius;
 			capsule.height = umaData.characterHeight;
 			capsule.center = new Vector3(0, capsule.height * 0.5f - 0.04f, 0);

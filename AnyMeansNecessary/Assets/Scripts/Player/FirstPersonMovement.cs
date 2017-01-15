@@ -115,12 +115,25 @@ public class FirstPersonMovement : MonoBehaviour {
     {
         m_RigidBody = GetComponent<Rigidbody>();
         m_RigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-        m_Capsule = GetComponent<CapsuleCollider>();
+        m_Capsule = GetCapsule();
         cam = Camera.main;
         mouseLook.Init(transform, cam.transform);
         mouseLook.SetCursorLock(false);
         anim = GetComponent<Animator>();
         anim.applyRootMotion = false;
+    }
+
+    CapsuleCollider GetCapsule()
+    {
+        CapsuleCollider[] caps = GetComponents<CapsuleCollider>();
+        foreach(CapsuleCollider col in caps)
+        {
+            if (!col.isTrigger)
+            {
+                return col;
+            }
+        }
+        return null;
     }
 
     private void OnEnable()
@@ -281,7 +294,7 @@ public class FirstPersonMovement : MonoBehaviour {
         m_PreviouslyGrounded = m_IsGrounded;
         RaycastHit hitInfo;
         if (Physics.SphereCast(transform.position + (Vector3.up * 0.3f), m_Capsule.radius * (1.0f - advancedSettings.shellOffset), Vector3.down, out hitInfo,
-                               ((m_Capsule.height / 2f) - m_Capsule.radius) + advancedSettings.groundCheckDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+            ((m_Capsule.height / 2f) - m_Capsule.radius) + advancedSettings.groundCheckDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
         {
             m_IsGrounded = true;
             m_GroundContactNormal = hitInfo.normal;

@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 namespace UMA {
 
-    public class AddPistolSlotScript : MonoBehaviour {
-
-        public GameObject Pistol;
+    public class AddPistolSlotScript : MonoBehaviour
+    {
 
         public void OnDnaApplied(UMAData umaData)
         {
@@ -28,21 +27,13 @@ namespace UMA {
             GunHolder.transform.rotation = Quaternion.identity;
             GunHolder.transform.SetParent(RightHand, false);
 
-            GameObject pistol = (GameObject)Instantiate(Pistol, Vector3.zero, Quaternion.identity);
+            GameObject pistol = (GameObject)Instantiate(Resources.Load("Guns/" + umaData.GetComponent<AILoadout>().Weapon.ToString()), Vector3.zero, Quaternion.identity);
 
             pistol.transform.position = new Vector3(-0.0901f, -0.0428f, 0.03421f);
             pistol.transform.rotation = Quaternion.Euler(184.443f, 91.212f, -15.281f);
             pistol.transform.SetParent(GunHolder.transform, false);
 
-            umaData.gameObject.GetComponent<PlayerController>().CurrentWeapon = pistol.GetComponent<BaseGun>();
-
-            UIElements UIE = FindObjectOfType<UIElements>();
-            if (UIE != null)
-            {
-                pistol.GetComponent<BaseGun>().updateWeapon = UIE.UpdateWeaponStats;
-            }
-            //print(umaData.gameObject.GetComponent<PlayerController>());
-
+            umaData.gameObject.GetComponent<FieldOfView>().CurrentWeapon = pistol.GetComponent<BaseGun>();
         }
     }
 }

@@ -4,11 +4,12 @@ using System.Collections;
 public class Sniper_Enemy : Base_Enemy {
 
     //public State _state;
-    GameObject Player;
-
-    void Start()
+    GameObject Player
     {
-        Player = GameObject.Find("Player");
+        get
+        {
+            return (PlayerController.PC != null) ? PlayerController.PC.gameObject : null;
+        }
     }
 
     void Update()

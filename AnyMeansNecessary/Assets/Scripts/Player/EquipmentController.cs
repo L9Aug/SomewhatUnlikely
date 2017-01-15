@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 public class EquipmentController : MonoBehaviour {
 
-    public enum EquipmentTypes { SilencedPistol, SniperRifle, AssaultRifle, Explosives, TranquilizerGun, Distraction }
+    public enum EquipmentTypes { SilencedPistol, SniperRifle, AssaultRifle, Explosives, Tazer, Distraction }
 
     public List<GameObject> Equipment = new List<GameObject>();
 
     private int currentWeapon = 0;
+    public EquipmentTypes CurrentEquipment;
     private Transform rightHand;
     private bool isAssigningEquipment = false;
     private UIElements UIE;
@@ -43,6 +44,7 @@ public class EquipmentController : MonoBehaviour {
             GameObject targetEquipment = Equipment.Find(x => x.name == chosenEquipment.ToString());
             if(targetEquipment != null)
             {
+                CurrentEquipment = chosenEquipment;
                 StartCoroutine(AssignEquipment(targetEquipment));
             }
         }
@@ -53,6 +55,14 @@ public class EquipmentController : MonoBehaviour {
         if (!isAssigningEquipment)
         {
             StartCoroutine(AssignEquipment(Equipment[(++currentWeapon) % Equipment.Count]));
+            for(int i = 0; i < 5; ++i)
+            {
+                if (Equipment[currentWeapon % Equipment.Count].name == ((EquipmentTypes)i).ToString())
+                {
+                    CurrentEquipment = (EquipmentTypes)i;
+                    break;
+                }
+            }
         }
     }
 
@@ -84,44 +94,55 @@ public class EquipmentController : MonoBehaviour {
     {
         isAssigningEquipment = true;
 
-        do
+        if (equipment.GetComponent<BaseGun>() != null)
         {
-            if (GetRightHand())
+            do
             {
-                if (!GetGunHolder())
+                if (GetRightHand())
                 {
-                    gunHolder = new GameObject();
-                    gunHolder.transform.position = Vector3.zero;
-                    gunHolder.transform.rotation = Quaternion.identity;
-                    gunHolder.transform.SetParent(rightHand, false);
-                    gunHolder.name = "GunHolder";
+                    if (!GetGunHolder())
+                    {
+                        gunHolder = new GameObject();
+                        gunHolder.transform.position = Vector3.zero;
+                        gunHolder.transform.rotation = Quaternion.identity;
+                        gunHolder.transform.SetParent(rightHand, false);
+                        gunHolder.name = "GunHolder";
+                    }
+                    else
+                    {
+                        if (gunHolder.transform.childCount >0)
+                        {
+                            Destroy(gunHolder.transform.GetChild(0).gameObject);
+                        }
+                    }
+
+                    GameObject nEquipment = (GameObject)Instantiate(equipment, Vector3.zero, Quaternion.identity);
+
+                    nEquipment.transform.position = new Vector3(-0.0901f, -0.0428f, 0.03421f);
+                    nEquipment.transform.rotation = Quaternion.Euler(184.443f, 91.212f, -15.281f);
+                    nEquipment.transform.SetParent(gunHolder.transform, false);
+
+                    GetComponent<PlayerController>().CurrentWeapon = nEquipment.GetComponent<BaseGun>();
+
+                    if (UIE != null)
+                    {
+                        nEquipment.GetComponent<BaseGun>().updateWeapon = UIE.UpdateWeaponStats;
+                    }
+
                 }
                 else
                 {
-                    Destroy(gunHolder.transform.GetChild(0).gameObject);
+                    yield return null;
                 }
 
-                GameObject nEquipment = (GameObject)Instantiate(equipment, Vector3.zero, Quaternion.identity);
 
-                nEquipment.transform.position = new Vector3(-0.0901f, -0.0428f, 0.03421f);
-                nEquipment.transform.rotation = Quaternion.Euler(184.443f, 91.212f, -15.281f);
-                nEquipment.transform.SetParent(gunHolder.transform, false);
-
-                GetComponent<PlayerController>().CurrentWeapon = nEquipment.GetComponent<BaseGun>();
-                
-                if (UIE != null)
-                {
-                    nEquipment.GetComponent<BaseGun>().updateWeapon = UIE.UpdateWeaponStats;
-                }
-
-            }
-            else
-            {
-                yield return null;
-            }
-
-        } while (rightHand == null);
-
+            } while (rightHand == null);
+        }
+        else
+        {
+            Destroy(PlayerController.PC.CurrentWeapon.gameObject);
+            PlayerController.PC.CurrentWeapon = null;
+        }
         isAssigningEquipment = false;
     }
 

@@ -15,7 +15,7 @@ namespace UMA
             if (playerController == null)
             {
                 playerController = umaData.gameObject.AddComponent<PlayerController>();
-                CapsuleCollider TriggerVolume = umaData.gameObject.AddComponent<CapsuleCollider>();
+                CapsuleCollider TriggerVolume = GetTriggerVolume(umaData);
                 TriggerVolume.isTrigger = true;
                 TriggerVolume.radius = 2;
                 TriggerVolume.height = umaData.characterHeight;
@@ -36,5 +36,26 @@ namespace UMA
                 healthComp.healthChanged.Add(UIE.UpdateHealth);
             }
         }
+
+        CapsuleCollider GetTriggerVolume(UMAData umaData)
+        {
+            CapsuleCollider[] cols = umaData.gameObject.GetComponents<CapsuleCollider>();
+            switch (cols.Length)
+            {
+                case 0:
+                    return umaData.gameObject.AddComponent<CapsuleCollider>();
+
+                default:
+                    foreach(CapsuleCollider col in cols)
+                    {
+                        if (col.isTrigger)
+                        {
+                            return col;
+                        }
+                    }
+                    return umaData.gameObject.AddComponent<CapsuleCollider>();
+            }
+        }
     }
+
 }

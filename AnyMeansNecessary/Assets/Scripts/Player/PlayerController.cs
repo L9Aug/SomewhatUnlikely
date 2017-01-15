@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
 
     public float TakedownFOV;
     public BaseGun CurrentWeapon;
+    public bool isADS;
 
     private List<GameObject> AIInRange = new List<GameObject>(); //list of AI that are in takedown range
     private bool CanTakedown = false;
@@ -73,21 +74,33 @@ public class PlayerController : MonoBehaviour {
     {
         if (Time.timeScale > 0.01 && PMC.PMSM.GetCurrentState() == "Movement")
         {
-            if (Input.GetButton("Fire"))
+            if (CurrentWeapon != null)
             {
-                // 1 << 10 is the AI layer.
-                if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, false, true))
+                isADS = Input.GetButton("Aim");
+
+                if (Input.GetButton("Fire"))
                 {
-                    if (AnimTest())
+                    // 1 << 10 is the AI layer.
+                    if (CurrentWeapon.Fire(GunTarget, 1 << 10, 0, false, true))
                     {
-                        anim.SetTrigger("Fire");
+                        if (AnimTest())
+                        {
+                            anim.SetTrigger("Fire");
+                        }
                     }
                 }
-            }
 
-            if (Input.GetButton("Reload"))
+                if (Input.GetButton("Reload"))
+                {
+                    CurrentWeapon.Reload();
+                }
+            }
+            else if(equipmentController.CurrentEquipment == EquipmentController.EquipmentTypes.Distraction)
             {
-                CurrentWeapon.Reload();
+                if (Input.GetButtonDown("Fire"))
+                {
+
+                }
             }
 
             if (Input.GetButtonDown("CycleEquipment"))
@@ -197,7 +210,6 @@ public class PlayerController : MonoBehaviour {
             if (!AIInRange.Contains(other.gameObject))
             {
                 AIInRange.Add(other.gameObject);
-                print(other.name + " Added " + AIInRange.Count);
             }
         }
     }

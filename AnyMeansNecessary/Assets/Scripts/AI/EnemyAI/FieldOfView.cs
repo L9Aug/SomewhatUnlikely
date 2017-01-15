@@ -25,10 +25,23 @@ public class FieldOfView : MonoBehaviour
     private Vector3 distToPlayer;
 
     public BaseGun CurrentWeapon;
-    Animator Anim;
+    Animator Anim
+    {
+        get
+        {
+            if(m_Anim == null)
+            {
+                m_Anim = GetComponent<Animator>();
+            }
+            return m_Anim;
+        }
+    }
+
+    Animator m_Anim;
+
     void Start()
     {
-        Anim = GetComponent<Animator>();
+        //Anim = GetComponent<Animator>();
         Player = GameObject.Find("Player");
         //just a core range based on the enemy type
         if (gameObject.tag == "StandardEnemy")

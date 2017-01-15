@@ -78,12 +78,12 @@ namespace SM
                     ReturnList.AddRange(triggeredTransition.Actions);
                 }
 
+                CurrentState = targetState;
+
                 if (targetState.EntryActions.Count > 0)
                 {
                     ReturnList.AddRange(targetState.EntryActions);
                 }
-
-                CurrentState = targetState;
             }
             else // If no transition has happened continue with this states actions.
             {
